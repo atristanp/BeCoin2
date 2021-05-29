@@ -1,0 +1,3667 @@
+<!DOCTYPE html>
+
+{% load static %}
+
+<html>
+  <!--  This source code is exported from pxCode, you can get more document from https://www.pxcode.io  -->
+  <head>
+
+    <title>BECOIN - Bancarrota App</title>
+    <link rel="icon" href="{% static 'Becoin_SVG\Recurso4.svg' %}" type="image/x-icon">
+
+
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+
+    <!--
+    <script src="js/posize/v1.00.js"></script>
+    <link rel="stylesheet" type="text/css" href="css/common.css" />
+    <link rel="stylesheet" type="text/css" href="css/fonts.css" />
+    -->
+
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+
+     <script type="text/javascript">
+        google.charts.load('current', {'packages':['corechart']});
+        google.charts.setOnLoadCallback(drawChart);
+
+        function drawChart() {
+
+            var nombre = ['Fecha'];
+            var mydata =[];
+            var col=[];
+            var contador = 0;
+            if(document.getElementById("Bitcoin EUR").checked) {
+                var bitcoin = []
+
+                {% for datos in datos_bitcoin %}
+
+                  bitcoin.push([{{datos.precio}},'{{datos.hora}}'])
+                  contador +=1;
+                 {% endfor %}
+                console.log("Bitcoin: ", bitcoin)
+                nombre.push('Bitcoin')
+            }
+
+            if(document.getElementById("Ethereum EUR").checked){
+                var ether = []
+                if(contador != 0){
+                  contador=0
+                }
+
+                {% for datos in datos_ethereum %}
+
+                  ether.push([{{datos.precio}},'{{datos.hora}}'])
+                  contador +=1;
+                {% endfor %}
+
+                nombre.push('Ethereum')
+            }
+
+            if(document.getElementById("BinanceCoin EUR").checked){
+                var binance = []
+
+                if(contador != 0){
+                  contador=0
+                }
+                {% for datos in datos_binance %}
+
+                  binance.push([{{datos.precio}},'{{datos.hora}}'])
+                  contador +=1;
+                {% endfor %}
+                nombre.push('BinanceCoin')
+            }
+
+            if(document.getElementById("Tether EUR").checked){
+                var tether = []
+
+                if(contador != 0){
+                  contador=0
+                }
+                {% for datos in datos_tether %}
+
+                  tether.push([{{datos.precio}},'{{datos.hora}}'])
+                  contador +=1;
+                {% endfor %}
+                nombre.push('Tether EUR')
+            }
+
+            if(document.getElementById("Dogecoin EUR").checked){
+                var doge = []
+
+                if(contador != 0){
+                  contador=0
+                }
+                {% for datos in datos_doge %}
+
+                  doge.push([{{datos.precio}},'{{datos.hora}}'])
+                  contador +=1;
+                {% endfor %}
+                nombre.push('Dogecoin EUR')
+            }
+
+           console.log("Doge: ", doge)
+
+            mydata.push(nombre)
+            console.log(contador)
+            for (let i = 0; i < contador; i++){
+                if(bitcoin != undefined) {
+                    col.push(bitcoin[i][1])
+                    col.push(bitcoin[i][0])
+                }
+
+                if(ether != undefined){
+                  if(document.getElementById("Bitcoin EUR").checked){
+                    col.push(ether[i][0])
+                    }
+                  else{
+                    col.push(ether[i][1])
+                    col.push(ether[i][0])
+                  }
+                }
+
+                if(binance != undefined){
+                  if(document.getElementById("Bitcoin EUR").checked || document.getElementById("Ethereum EUR").checked){
+                    col.push(binance[i][0])
+                    }
+                  else{
+                    col.push(binance[i][1])
+                    col.push(binance[i][0])
+                  }
+                }
+
+                if(tether != undefined){
+                  if(document.getElementById("Bitcoin EUR").checked || document.getElementById("Ethereum EUR").checked || document.getElementById("BinanceCoin EUR").checked){
+                    col.push(tether[i][0])
+                    }
+                  else{
+                    col.push(tether[i][1])
+                    col.push(tether[i][0])
+                  }
+                }
+
+                if(doge != undefined){
+                  if(document.getElementById("Bitcoin EUR").checked || document.getElementById("Ethereum EUR").checked || document.getElementById("BinanceCoin EUR").checked || document.getElementById("Tether EUR").checked ){
+                    col.push(doge[i][0])
+                    }
+                  else{
+                    col.push(doge[i][1])
+                    col.push(doge[i][0])
+                  }
+                }
+
+                mydata.push(col)
+                col = []
+            }
+            var data = google.visualization.arrayToDataTable(mydata)
+
+
+            var options = {
+                title: 'Cryptocurrency',
+                <!-- Cambia el color -->
+                backgroundColor: '#000000',
+                titleTextStyle: { color: 'rgb(64, 254, 203)' },
+                hAxis: {title: '',  textStyle: {color: 'grey'}},
+                vAxis: {minValue: 0, textStyle: {color: 'grey'}},
+            };
+            var chart = new google.visualization.AreaChart(document.getElementById('chart_div'));
+            if(document.getElementById("Bitcoin EUR").checked || document.getElementById("Ethereum EUR").checked || document.getElementById("BinanceCoin EUR").checked || document.getElementById("Tether EUR").checked || document.getElementById("Dogecoin EUR").checked ){
+            chart.draw(data, options);
+            }
+        }
+    </script>
+
+
+
+    <style>
+
+    a {
+  text-decoration: none; /* no underline */
+}
+    /* width */
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #888;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+
+input[type=text] {
+  text-align:left;
+  width: 100%;
+  box-sizing: border-box;
+  border: 2px solid #DDDDDD;
+  border-radius: 4px;
+  font-size: 16px;
+  background-color: black;
+  color: #DDDDDD;
+}
+input[type=number]::-webkit-inner-spin-button,
+input[type=number]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+input[type=number] { -moz-appearance:textfield; }
+
+input[type=number] {
+
+  text-align:left;
+  width: 100%;
+  box-sizing: border-box;
+  border: 0;
+  font-size: 16px;
+  background-color: black;
+  color: grey;
+}
+
+::placeholder {
+    /* Se aplica específicamente
+       al texto del placeholder */
+       color: grey;
+    float: center;
+    padding: 7px 7px 7px 2px;
+}
+
+
+
+
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+      /* This source code is exported from pxCode, you can get more document from https://www.pxcode.io */
+
+
+.simulador-bi-t-flexbox {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+}
+
+.simulador-prueba{
+display: flex;
+  flex-direction: row;
+  width: 100%;
+}
+
+
+.simulador-bi-t-flexbox-item {
+  padding: 30px 30px;
+  display: flex;
+  flex: 1 1 840px;
+}
+.simulador-bi-t-flexbox1 {
+  display: flex;
+  flex-direction: column;
+  background-color: rgb(19, 19, 22);
+  border-radius: 16px 16px 16px 16px;
+}
+.simulador-bi-t-flexbox1-posize {
+  position: relative;
+  flex-grow: 1;
+  margin: 0px;
+}
+.simulador-bi-t-flexbox1-item {
+  display: flex;
+  flex: 0 0 auto;
+}
+.simulador-bi-t-txt {
+  font: 700 40px/1.4 Titillium Web, Helvetica, Arial, serif;
+  color: rgb(255, 255, 255);
+  letter-spacing: 0;
+}
+.simulador-bi-t-txt-posize {
+  position: relative;
+  width: fit-content;
+  margin: 32px 0px 12px 32px;
+}
+.simulador-bi-t-flexbox2 {
+  display: flex;
+  background-color: rgba(0, 0, 0, 0.4823529411764706);
+  border-radius: 12px 12px 12px 12px;
+  flex: 0 0 auto;
+}
+.simulador-bi-t-flexbox2-posize {
+  position: relative;
+  min-height: 72px;
+  margin: 12px 34px 16px 32px;
+}
+.simulador-bi-t-flexbox2-space {
+  display: flex;
+  flex: 0 0 auto;
+  min-width: 16px;
+}
+.simulador-bi-t-flexbox2-item {
+  display: flex;
+  flex: 0 0 auto;
+  min-width: 243px;
+}
+.simulador-bi-t-txt1 {
+  font: 700 24px/1.6666666666666667 Nunito Sans, Helvetica, Arial, serif;
+  color: rgb(82, 82, 82);
+  text-align: justify;
+  letter-spacing: 0;
+}
+.simulador-bi-t-txt1-posize {
+  position: relative;
+  width: fit-content;
+  margin: 15px 0px 17px;
+}
+.simulador-bi-t-flexbox2-space1 {
+  display: flex;
+  flex: 1 1 454px;
+}
+.simulador-bi-t-flexbox2-item1 {
+  display: flex;
+  flex: 0 0 auto;
+  min-width: 45px;
+}
+.simulador-bi-t-txt2 {
+  display: flex;
+  justify-content: flex-end;
+  font: 700 24px/1.6666666666666667 Nunito Sans, Helvetica, Arial, serif;
+  color: rgb(82, 82, 82);
+  text-align: right;
+  letter-spacing: 0;
+}
+.simulador-bi-t-txt2-posize {
+  position: relative;
+  width: fit-content;
+  margin: 16px 0px 16px auto;
+}
+.simulador-bi-t-flexbox3 {
+  display: flex;
+  background-color: rgba(0, 0, 0, 0.4823529411764706);
+  border-radius: 12px 12px 12px 12px;
+  flex: 0 0 auto;
+}
+.simulador-bi-t-flexbox3-posize {
+  position: relative;
+  min-height: 72px;
+  margin: 16px 34px 16px 32px;
+}
+.simulador-bi-t-flexbox3-space {
+  display: flex;
+  flex: 0 0 auto;
+  min-width: 16px;
+}
+.simulador-bi-t-flexbox3-item {
+  display: flex;
+  flex: 0 0 auto;
+  min-width: 422px;
+}
+.simulador-bi-t-txt3 {
+  font: 700 24px/1.6666666666666667 Nunito Sans, Helvetica, Arial, serif;
+  color: rgb(82, 82, 82);
+  text-align: justify;
+  letter-spacing: 0;
+}
+.simulador-bi-t-txt3-posize {
+  position: relative;
+  width: fit-content;
+  margin: 15px 0px 17px;
+}
+.simulador-bi-t-flexbox3-space1 {
+  display: flex;
+  flex: 1 1 262.96px;
+}
+.simulador-bi-t-flexbox3-item1 {
+  display: flex;
+  flex: 0 0 auto;
+  min-width: 57px;
+}
+.simulador-bi-t-txt4 {
+  display: flex;
+  justify-content: flex-end;
+  font: 700 24px/1.6666666666666667 Nunito Sans, Helvetica, Arial, serif;
+  color: rgb(82, 82, 82);
+  text-align: right;
+  letter-spacing: 0;
+}
+.simulador-bi-t-txt4-posize {
+  position: relative;
+  width: fit-content;
+  margin: 12px 0px 20px auto;
+}
+.simulador-bi-t-flexbox3-space2 {
+  display: flex;
+  flex: 0 0 auto;
+  min-width: 16.04px;
+}
+.simulador-bi-t-img {
+  background: var(--src) center center / cover no-repeat;
+  flex: 0 0 auto;
+}
+.simulador-bi-t-img-posize {
+  position: relative;
+  min-height: 76px;
+  margin: 16px 0px 0px;
+}
+.simulador-bi-t-flexbox-space {
+  display: flex;
+  flex: 1 1 80px;
+}
+.simulador-bi-t-flexbox4 {
+  display: flex;
+  flex-direction: column;
+  background-color: rgb(19, 19, 22);
+  border-radius: 16px 16px 16px 16px;
+}
+.simulador-bi-t-flexbox4-posize {
+  position: relative;
+  flex-grow: 1;
+  margin: 0px;
+}
+.simulador-bi-t-flexbox4-item {
+  display: flex;
+  flex: 0 0 auto;
+}
+.simulador-bi-t-flexbox5 {
+  display: flex;
+  background-color: rgba(0, 0, 0, 0.4823529411764706);
+  border-radius: 12px 12px 12px 12px;
+  flex: 0 0 auto;
+}
+.simulador-bi-t-flexbox5-posize {
+  position: relative;
+  min-height: 72px;
+  margin: 12px 34px 16px 32px;
+}
+.simulador-bi-t-flexbox5-space {
+  display: flex;
+  flex: 0 0 auto;
+  min-width: 16px;
+}
+.simulador-bi-t-flexbox5-item {
+  display: flex;
+  flex: 0 0 auto;
+  min-width: 243px;
+}
+.simulador-bi-t-txt6 {
+  font: 700 24px/1.6666666666666667 Nunito Sans, Helvetica, Arial, serif;
+  color: rgb(82, 82, 82);
+  text-align: justify;
+  letter-spacing: 0;
+}
+.simulador-bi-t-txt6-posize {
+  position: relative;
+  width: fit-content;
+  margin: 15px 0px 17px;
+}
+.simulador-bi-t-flexbox5-space1 {
+  display: flex;
+  flex: 1 1 454px;
+}
+.simulador-bi-t-flexbox5-item1 {
+  display: flex;
+  flex: 0 0 auto;
+  min-width: 45px;
+}
+.simulador-bi-t-txt7 {
+  display: flex;
+  justify-content: flex-end;
+  font: 700 24px/1.6666666666666667 Nunito Sans, Helvetica, Arial, serif;
+  color: rgb(82, 82, 82);
+  text-align: right;
+  letter-spacing: 0;
+}
+.simulador-bi-t-txt7-posize {
+  position: relative;
+  width: fit-content;
+  margin: 16px 0px 16px auto;
+}
+.simulador-bi-t-flexbox6 {
+  display: flex;
+  background-color: rgba(0, 0, 0, 0.4823529411764706);
+  border-radius: 12px 12px 12px 12px;
+  flex: 0 0 auto;
+}
+.simulador-bi-t-flexbox6-posize {
+  position: relative;
+  min-height: 72px;
+  margin: 16px 34px 16px 32px;
+}
+.simulador-bi-t-flexbox6-space {
+  display: flex;
+  flex: 0 0 auto;
+  min-width: 16px;
+}
+.simulador-bi-t-flexbox6-item {
+  display: flex;
+  flex: 0 0 auto;
+  min-width: 422px;
+}
+.simulador-bi-t-txt8 {
+  font: 700 24px/1.6666666666666667 Nunito Sans, Helvetica, Arial, serif;
+  color: rgb(82, 82, 82);
+  text-align: justify;
+  letter-spacing: 0;
+}
+.simulador-bi-t-txt8-posize {
+  position: relative;
+  width: fit-content;
+  margin: 15px 0px 17px;
+}
+.simulador-bi-t-flexbox6-space1 {
+  display: flex;
+  flex: 1 1 262.96px;
+}
+.simulador-bi-t-flexbox6-item1 {
+  display: flex;
+  flex: 0 0 auto;
+  min-width: 57px;
+}
+.simulador-bi-t-txt9 {
+  display: flex;
+  justify-content: flex-end;
+  font: 700 24px/1.6666666666666667 Nunito Sans, Helvetica, Arial, serif;
+  color: rgb(82, 82, 82);
+  text-align: right;
+  letter-spacing: 0;
+}
+.simulador-bi-t-txt9-posize {
+  position: relative;
+  width: fit-content;
+  margin: 12px 0px 20px auto;
+}
+.simulador-bi-t-flexbox6-space2 {
+  display: flex;
+  flex: 0 0 auto;
+  min-width: 16.04px;
+}
+
+
+.inicio-flexbox {
+  display: flex;
+  flex-direction: column;
+  background-color: #191920;
+  width: 100%;
+  height: 100%;
+}
+.inicio-flexbox1 {
+  display: flex;
+  background-color: #131316;
+  box-shadow: 0px 4px 12px 0px rgba(0, 0, 0, 0.2039215686);
+  flex: 0 0 auto;
+}
+.inicio-flexbox1-posize {
+  position: relative;
+  min-height: 120px;
+  margin: 0px;
+}
+.inicio-flexbox1-space {
+  display: flex;
+  flex: 0 1 92px;
+}
+.inicio-flexbox1-item {
+  display: flex;
+  flex: 0 0 auto;
+}
+.inicio-txt {
+  display: flex;
+  align-items: center;
+  font: 700 24px/1.6666666667 Titillium Web, Helvetica, Arial, serif;
+  color: white;
+  letter-spacing: 0;
+}
+.inicio-txt-posize {
+  position: relative;
+  height: min-content;
+  width: fit-content;
+  margin: 40px 0px;
+}
+.inicio-flexbox1-space1 {
+  display: flex;
+  flex: 0 1 46px;
+}
+.inicio-txt1 {
+  display: flex;
+  align-items: center;
+  font: 24px/1.6666666667 Titillium Web, Helvetica, Arial, serif;
+  color: white;
+  letter-spacing: 0;
+}
+.inicio-txt1-posize {
+  position: relative;
+  height: min-content;
+  width: fit-content;
+  margin: 40px 0px;
+}
+.inicio-flexbox1-space2 {
+  display: flex;
+  flex: 0 1 37px;
+}
+.inicio-txt2 {
+  display: flex;
+  align-items: center;
+  font: 24px/1.6666666667 Titillium Web, Helvetica, Arial, serif;
+  color: white;
+  letter-spacing: 0;
+}
+.inicio-txt2-posize {
+  position: relative;
+  height: min-content;
+  width: fit-content;
+  margin: 40px 0px;
+}
+.inicio-flexbox1-space3 {
+  display: flex;
+  flex: 0 1 31px;
+}
+.inicio-txt3 {
+  display: flex;
+  align-items: center;
+  font: 24px/1.6666666667 Titillium Web, Helvetica, Arial, serif;
+  color: #40fecb;
+  letter-spacing: 0;
+}
+.inicio-txt3-posize {
+  position: relative;
+  height: min-content;
+  width: fit-content;
+  margin: 40px 0px;
+}
+.inicio-flexbox1-space4 {
+  display: flex;
+  flex: 1 1 800px;
+}
+.inicio-flexbox1-item4 {
+  display: flex;
+  flex: 0 1 266px;
+}
+.inicio-flexbox2 {
+  display: flex;
+  box-shadow: 0px 2px 6px 0px rgba(0, 0, 0, 0.1215686275);
+  border-radius: 4px 4px 4px 4px;
+}
+.inicio-flexbox2-posize {
+  position: relative;
+  min-height: 40px;
+  flex-grow: 1;
+  margin: 40px 0px;
+}
+.inicio-flexbox2-item {
+  display: flex;
+  flex: 0 1 226px;
+}
+.inicio-group {
+  display: flex;
+  background-color: rgba(0, 0, 0, 0.4823529412);
+}
+.inicio-group-posize {
+  position: relative;
+  height: min-content;
+  min-height: 40px;
+  flex-grow: 1;
+  margin: 0px;
+}
+.inicio-txt4 {
+  display: flex;
+  align-items: center;
+  font: 600 24px/1.6666666667 Titillium Web, Helvetica, Arial, serif;
+  color: white;
+  letter-spacing: 0;
+}
+.inicio-txt4-posize {
+  position: relative;
+  height: min-content;
+  width: fit-content;
+}
+.inicio-flexbox2-space {
+  display: flex;
+  flex: 0 0 auto;
+  min-width: 7.67px;
+}
+.inicio-icon {
+  background: var(--src) center center / contain no-repeat;
+}
+.inicio-icon-posize {
+  position: relative;
+  height: 26px;
+  width: 26px;
+  min-width: 26px;
+  margin: 7px 0px;
+
+}
+.inicio-flexbox2-space1 {
+  display: flex;
+  flex: 0 0 auto;
+  min-width: 6.33px;
+}
+.inicio-flexbox1-space5 {
+  display: flex;
+  flex: 0 1 43.33px;
+}
+.inicio-icon-posize1 {
+  position: relative;
+  height: 31.58px;
+  width: 26.33px;
+  min-width: 26.33px;
+  margin: 44px 0px 45px;
+}
+.inicio-flexbox1-space6 {
+  display: flex;
+  flex: 0 1 86.33px;
+}
+.inicio-flexbox3 {
+  display: flex;
+  background-color: #191920;
+  box-shadow: 0px 4px 12px 0px rgba(0, 0, 0, 0.2039215686);
+  flex: 2 2 auto;
+}
+.inicio-flexbox3-posize {
+  position: relative;
+  min-height: 1080px;
+  margin: 0px;
+}
+.inicio-flexbox3-space {
+  display: flex;
+  flex: 0.3 1 auto;
+}
+.inicio-flexbox3-item {
+  display: flex;
+  flex: 2;
+}
+.inicio-flexbox4 {
+  display: flex;
+  flex-direction: column;
+  background-color: #131316;
+}
+.inicio-flexbox4-posize {
+  position: relative;
+  height: min-content;
+  flex-grow: 1;
+  margin: 40px 0px;
+}
+.inicio-flexbox4-item {
+  display: flex;
+  flex: 0 0 auto;
+}
+.inicio-flexbox5 {
+  display: flex;
+  width: 100%;
+  height: 100%;
+}
+.inicio-flexbox5-item {
+  display: flex;
+  flex: 0 0 auto;
+  min-width: 50px;
+}
+.inicio-txt5 {
+  display: flex;
+  justify-content: flex-end;
+  font: 16px/1.75 Titillium Web, Helvetica, Arial, serif;
+  color: white;
+  text-align: right;
+  letter-spacing: 0;
+}
+.inicio-txt5-posize {
+  position: relative;
+  height: min-content;
+  width: fit-content;
+  margin: 0px 0px 0px auto;
+}
+.inicio-flexbox5-space {
+  display: flex;
+  flex: 0 0 auto;
+  min-width: 0px;
+}
+.inicio-flexbox5-space2 {
+  display: flex;
+  flex: 0 0 auto;
+  min-width: 110px;
+}
+.inicio-flexbox5-item1 {
+  display: flex;
+  flex: 0 0 auto;
+  min-width: 70px;
+}
+.inicio-txt6 {
+  display: flex;
+  justify-content: flex-end;
+  font: 16px/1.75 Titillium Web, Helvetica, Arial, serif;
+  color: white;
+  text-align: right;
+  letter-spacing: 0;
+}
+.inicio-txt6-posize {
+  position: relative;
+  height: min-content;
+  width: fit-content;
+  margin: 0px 0px 0px auto;
+}
+.inicio-flexbox5-space1 {
+  display: flex;
+  flex: 0 0 auto;
+  min-width: 0px;
+}
+.inicio-flexbox5-item2 {
+  display: flex;
+  flex: 0 0 auto;
+  min-width: 71px;
+}
+.inicio-txt7 {
+  display: flex;
+  justify-content: flex-end;
+  font: 16px/1.75 Titillium Web, Helvetica, Arial, serif;
+  color: white;
+  text-align: right;
+  letter-spacing: 0;
+}
+.inicio-txt7-posize {
+  position: relative;
+  height: min-content;
+  width: fit-content;
+  margin: 0px 0px 0px auto;
+}
+.inicio-flexbox6 {
+  display: flex;
+  flex: 0 0 auto;
+}
+.inicio-flexbox6-posize {
+  position: relative;
+  min-height: 24px;
+  margin: 14px 24px 4px 25px;
+}
+.inicio-flexbox6-item {
+  display: flex;
+  flex: 0 0 auto;
+  min-width: 56px;
+}
+.inicio-txt8 {
+  font: 600 14px/1.7142857143 Titillium Web, Helvetica, Arial, serif;
+  color: white;
+  text-align: justify;
+  letter-spacing: 0;
+}
+.inicio-txt8-posize {
+  position: relative;
+  height: min-content;
+  width: fit-content;
+  margin: 0px;
+}
+.inicio-flexbox6-space {
+  display: flex;
+  flex: 0 1 53px;
+}
+.inicio-flexbox6-item1 {
+  display: flex;
+  flex: 0 0 auto;
+  min-width: 27px;
+}
+.inicio-txt9 {
+  display: flex;
+  justify-content: flex-end;
+  font: 14px/1.7142857143 Titillium Web, Helvetica, Arial, serif;
+  color: white;
+  text-align: right;
+  letter-spacing: 0;
+}
+.inicio-txt9-posize {
+  position: relative;
+  height: min-content;
+  width: fit-content;
+  margin: 0px 0px 0px auto;
+}
+.inicio-flexbox6-space1 {
+  display: flex;
+  flex: 1 1 65px;
+}
+.inicio-flexbox6-item2 {
+  display: flex;
+  flex: 0 0 auto;
+  min-width: 27px;
+}
+.inicio-txt10 {
+  display: flex;
+  justify-content: flex-end;
+  font: 14px/1.7142857143 Titillium Web, Helvetica, Arial, serif;
+  color: white;
+  text-align: right;
+  letter-spacing: 0;
+}
+.inicio-txt10-posize {
+  position: relative;
+  height: min-content;
+  width: fit-content;
+  margin: 0px 0px 0px auto;
+}
+.inicio-flexbox6-space2 {
+  display: flex;
+  flex: 1 1 65px;
+}
+.inicio-flexbox6-item3 {
+  display: flex;
+  flex: 0 0 auto;
+  min-width: 27px;
+}
+.inicio-txt11 {
+  display: flex;
+  justify-content: flex-end;
+  font: 14px/1.7142857143 Titillium Web, Helvetica, Arial, serif;
+  color: white;
+  text-align: right;
+  letter-spacing: 0;
+}
+.inicio-txt11-posize {
+  position: relative;
+  height: min-content;
+  width: fit-content;
+  margin: 0px 0px 0px auto;
+}
+.inicio-line {
+  background-color: #40fecb;
+  flex: 0 0 auto;
+}
+.inicio-line-posize {
+  position: relative;
+  height: 1px;
+  margin: 4px 16px 14px 17px;
+}
+.inicio-flexbox7 {
+  display: flex;
+  flex: 0 0 auto;
+}
+.inicio-flexbox7-posize {
+  position: relative;
+  min-height: 24px;
+  margin: 14px 24px 4px 25px;
+}
+.inicio-flexbox7-item {
+  display: flex;
+  flex: 0 0 auto;
+  min-width: 56px;
+}
+.inicio-txt12 {
+  font: 600 14px/1.7142857143 Titillium Web, Helvetica, Arial, serif;
+  color: white;
+  text-align: justify;
+  letter-spacing: 0;
+}
+.inicio-txt12-posize {
+  position: relative;
+  height: min-content;
+  width: fit-content;
+  margin: 0px;
+}
+.inicio-flexbox7-space {
+  display: flex;
+  flex: 0 1 53px;
+}
+.inicio-flexbox7-item1 {
+  display: flex;
+  flex: 0 0 auto;
+  min-width: 27px;
+}
+.inicio-txt13 {
+  display: flex;
+  justify-content: flex-end;
+  font: 14px/1.7142857143 Titillium Web, Helvetica, Arial, serif;
+  color: white;
+  text-align: right;
+  letter-spacing: 0;
+}
+.inicio-txt13-posize {
+  position: relative;
+  height: min-content;
+  width: fit-content;
+  margin: 0px 0px 0px auto;
+}
+.inicio-flexbox7-space1 {
+  display: flex;
+  flex: 1 1 65px;
+}
+.inicio-flexbox7-item2 {
+  display: flex;
+  flex: 0 0 auto;
+  min-width: 27px;
+}
+.inicio-txt14 {
+  display: flex;
+  justify-content: flex-end;
+  font: 14px/1.7142857143 Titillium Web, Helvetica, Arial, serif;
+  color: white;
+  text-align: right;
+  letter-spacing: 0;
+}
+.inicio-txt14-posize {
+  position: relative;
+  height: min-content;
+  width: fit-content;
+  margin: 0px 0px 0px auto;
+}
+.inicio-flexbox7-space2 {
+  display: flex;
+  flex: 1 1 65px;
+}
+.inicio-flexbox7-item3 {
+  display: flex;
+  flex: 0 0 auto;
+  min-width: 27px;
+}
+.inicio-txt15 {
+  display: flex;
+  justify-content: flex-end;
+  font: 14px/1.7142857143 Titillium Web, Helvetica, Arial, serif;
+  color: white;
+  text-align: right;
+  letter-spacing: 0;
+}
+.inicio-txt15-posize {
+  position: relative;
+  height: min-content;
+  width: fit-content;
+  margin: 0px 0px 0px auto;
+}
+.inicio-flexbox8 {
+  display: flex;
+  flex: 0 0 auto;
+}
+.inicio-flexbox8-posize {
+  position: relative;
+  min-height: 24px;
+  margin: 14px 24px 4px 25px;
+}
+.inicio-flexbox8-item {
+  display: flex;
+  flex: 0 0 auto;
+  min-width: 56px;
+}
+.inicio-txt16 {
+  font: 600 14px/1.7142857143 Titillium Web, Helvetica, Arial, serif;
+  color: white;
+  text-align: justify;
+  letter-spacing: 0;
+}
+.inicio-txt16-posize {
+  position: relative;
+  height: min-content;
+  width: fit-content;
+  margin: 0px;
+}
+.inicio-flexbox8-space {
+  display: flex;
+  flex: 0 1 53px;
+}
+.inicio-flexbox8-item1 {
+  display: flex;
+  flex: 0 0 auto;
+  min-width: 27px;
+}
+.inicio-txt17 {
+  display: flex;
+  justify-content: flex-end;
+  font: 14px/1.7142857143 Titillium Web, Helvetica, Arial, serif;
+  color: white;
+  text-align: right;
+  letter-spacing: 0;
+}
+.inicio-txt17-posize {
+  position: relative;
+  height: min-content;
+  width: fit-content;
+  margin: 0px 0px 0px auto;
+}
+.inicio-flexbox8-space1 {
+  display: flex;
+  flex: 1 1 65px;
+}
+.inicio-flexbox8-item2 {
+  display: flex;
+  flex: 0 0 auto;
+  min-width: 27px;
+}
+.inicio-txt18 {
+  display: flex;
+  justify-content: flex-end;
+  font: 14px/1.7142857143 Titillium Web, Helvetica, Arial, serif;
+  color: white;
+  text-align: right;
+  letter-spacing: 0;
+}
+.inicio-txt18-posize {
+  position: relative;
+  height: min-content;
+  width: fit-content;
+  margin: 0px 0px 0px auto;
+}
+.inicio-flexbox8-space2 {
+  display: flex;
+  flex: 1 1 65px;
+}
+.inicio-flexbox8-item3 {
+  display: flex;
+  flex: 0 0 auto;
+  min-width: 27px;
+}
+.inicio-txt19 {
+  display: flex;
+  justify-content: flex-end;
+  font: 14px/1.7142857143 Titillium Web, Helvetica, Arial, serif;
+  color: white;
+  text-align: right;
+  letter-spacing: 0;
+}
+.inicio-txt19-posize {
+  position: relative;
+  height: min-content;
+  width: fit-content;
+  margin: 0px 0px 0px auto;
+}
+.inicio-flexbox9 {
+  display: flex;
+  flex: 0 0 auto;
+}
+.inicio-flexbox9-posize {
+  position: relative;
+  min-height: 24px;
+  margin: 14px 24px 4px 25px;
+}
+.inicio-flexbox9-item {
+  display: flex;
+  flex: 0 0 auto;
+  min-width: 56px;
+}
+.inicio-txt20 {
+  font: 600 14px/1.7142857143 Titillium Web, Helvetica, Arial, serif;
+  color: white;
+  text-align: justify;
+  letter-spacing: 0;
+}
+.inicio-txt20-posize {
+  position: relative;
+  height: min-content;
+  width: fit-content;
+  margin: 0px;
+}
+.inicio-flexbox9-space {
+  display: flex;
+  flex: 0 1 53px;
+}
+.inicio-flexbox9-item1 {
+  display: flex;
+  flex: 0 0 auto;
+  min-width: 27px;
+}
+.inicio-txt21 {
+  display: flex;
+  justify-content: flex-end;
+  font: 14px/1.7142857143 Titillium Web, Helvetica, Arial, serif;
+  color: white;
+  text-align: right;
+  letter-spacing: 0;
+}
+.inicio-txt21-posize {
+  position: relative;
+  height: min-content;
+  width: fit-content;
+  margin: 0px 0px 0px auto;
+}
+.inicio-flexbox9-space1 {
+  display: flex;
+  flex: 1 1 65px;
+}
+.inicio-flexbox9-item2 {
+  display: flex;
+  flex: 0 0 auto;
+  min-width: 27px;
+}
+.inicio-txt22 {
+  display: flex;
+  justify-content: flex-end;
+  font: 14px/1.7142857143 Titillium Web, Helvetica, Arial, serif;
+  color: white;
+  text-align: right;
+  letter-spacing: 0;
+}
+.inicio-txt22-posize {
+  position: relative;
+  height: min-content;
+  width: fit-content;
+  margin: 0px 0px 0px auto;
+}
+.inicio-flexbox9-space2 {
+  display: flex;
+  flex: 1 1 65px;
+}
+.inicio-flexbox9-item3 {
+  display: flex;
+  flex: 0 0 auto;
+  min-width: 27px;
+}
+.inicio-txt23 {
+  display: flex;
+  justify-content: flex-end;
+  font: 14px/1.7142857143 Titillium Web, Helvetica, Arial, serif;
+  color: white;
+  text-align: right;
+  letter-spacing: 0;
+}
+.inicio-txt23-posize {
+  position: relative;
+  height: min-content;
+  width: fit-content;
+  margin: 0px 0px 0px auto;
+}
+.inicio-flexbox10 {
+  display: flex;
+  flex: 0 0 auto;
+}
+.inicio-flexbox10-posize {
+  position: relative;
+  min-height: 24px;
+  margin: 14px 24px 4px 25px;
+}
+.inicio-flexbox10-item {
+  display: flex;
+  flex: 0 0 auto;
+  min-width: 56px;
+}
+.inicio-txt24 {
+  font: 600 14px/1.7142857143 Titillium Web, Helvetica, Arial, serif;
+  color: white;
+  text-align: justify;
+  letter-spacing: 0;
+}
+.inicio-txt24-posize {
+  position: relative;
+  height: min-content;
+  width: fit-content;
+  margin: 0px;
+}
+.inicio-flexbox10-space {
+  display: flex;
+  flex: 0 1 53px;
+}
+.inicio-flexbox10-item1 {
+  display: flex;
+  flex: 0 0 auto;
+  min-width: 27px;
+}
+.inicio-txt25 {
+  display: flex;
+  justify-content: flex-end;
+  font: 14px/1.7142857143 Titillium Web, Helvetica, Arial, serif;
+  color: white;
+  text-align: right;
+  letter-spacing: 0;
+}
+.inicio-txt25-posize {
+  position: relative;
+  height: min-content;
+  width: fit-content;
+  margin: 0px 0px 0px auto;
+}
+.inicio-flexbox10-space1 {
+  display: flex;
+  flex: 1 1 65px;
+}
+.inicio-flexbox10-item2 {
+  display: flex;
+  flex: 0 0 auto;
+  min-width: 27px;
+}
+.inicio-txt26 {
+  display: flex;
+  justify-content: flex-end;
+  font: 14px/1.7142857143 Titillium Web, Helvetica, Arial, serif;
+  color: white;
+  text-align: right;
+  letter-spacing: 0;
+}
+.inicio-txt26-posize {
+  position: relative;
+  height: min-content;
+  width: fit-content;
+  margin: 0px 0px 0px auto;
+}
+.inicio-flexbox10-space2 {
+  display: flex;
+  flex: 1 1 65px;
+}
+.inicio-flexbox10-item3 {
+  display: flex;
+  flex: 0 0 auto;
+  min-width: 27px;
+}
+.inicio-txt27 {
+  display: flex;
+  justify-content: flex-end;
+  font: 14px/1.7142857143 Titillium Web, Helvetica, Arial, serif;
+  color: white;
+  text-align: right;
+  letter-spacing: 0;
+}
+.inicio-txt27-posize {
+  position: relative;
+  height: min-content;
+  width: fit-content;
+  margin: 0px 0px 0px auto;
+}
+.inicio-flexbox11 {
+  display: flex;
+  flex: 0 0 auto;
+}
+.inicio-flexbox11-posize {
+  position: relative;
+  min-height: 24px;
+  margin: 14px 24px 4px 25px;
+}
+.inicio-flexbox11-item {
+  display: flex;
+  flex: 0 0 auto;
+  min-width: 56px;
+}
+.inicio-txt28 {
+  font: 600 14px/1.7142857143 Titillium Web, Helvetica, Arial, serif;
+  color: white;
+  text-align: justify;
+  letter-spacing: 0;
+}
+.inicio-txt28-posize {
+  position: relative;
+  height: min-content;
+  width: fit-content;
+  margin: 0px;
+}
+.inicio-flexbox11-space {
+  display: flex;
+  flex: 0 1 53px;
+}
+.inicio-flexbox11-item1 {
+  display: flex;
+  flex: 0 0 auto;
+  min-width: 27px;
+}
+.inicio-txt29 {
+  display: flex;
+  justify-content: flex-end;
+  font: 14px/1.7142857143 Titillium Web, Helvetica, Arial, serif;
+  color: white;
+  text-align: right;
+  letter-spacing: 0;
+}
+.inicio-txt29-posize {
+  position: relative;
+  height: min-content;
+  width: fit-content;
+  margin: 0px 0px 0px auto;
+}
+.inicio-flexbox11-space1 {
+  display: flex;
+  flex: 1 1 65px;
+}
+.inicio-flexbox11-item2 {
+  display: flex;
+  flex: 0 0 auto;
+  min-width: 27px;
+}
+.inicio-txt30 {
+  display: flex;
+  justify-content: flex-end;
+  font: 14px/1.7142857143 Titillium Web, Helvetica, Arial, serif;
+  color: white;
+  text-align: right;
+  letter-spacing: 0;
+}
+.inicio-txt30-posize {
+  position: relative;
+  height: min-content;
+  width: fit-content;
+  margin: 0px 0px 0px auto;
+}
+.inicio-flexbox11-space2 {
+  display: flex;
+  flex: 1 1 65px;
+}
+.inicio-flexbox11-item3 {
+  display: flex;
+  flex: 0 0 auto;
+  min-width: 27px;
+}
+.inicio-txt31 {
+  display: flex;
+  justify-content: flex-end;
+  font: 14px/1.7142857143 Titillium Web, Helvetica, Arial, serif;
+  color: white;
+  text-align: right;
+  letter-spacing: 0;
+}
+.inicio-txt31-posize {
+  position: relative;
+  height: min-content;
+  width: fit-content;
+  margin: 0px 0px 0px auto;
+}
+.inicio-flexbox12 {
+  display: flex;
+  flex: 0 0 auto;
+}
+.inicio-flexbox12-posize {
+  position: relative;
+  min-height: 24px;
+  margin: 14px 24px 4px 25px;
+}
+.inicio-flexbox12-item {
+  display: flex;
+  flex: 0 0 auto;
+  min-width: 56px;
+}
+.inicio-txt32 {
+  font: 600 14px/1.7142857143 Titillium Web, Helvetica, Arial, serif;
+  color: white;
+  text-align: justify;
+  letter-spacing: 0;
+}
+.inicio-txt32-posize {
+  position: relative;
+  height: min-content;
+  width: fit-content;
+  margin: 0px;
+}
+.inicio-flexbox12-space {
+  display: flex;
+  flex: 0 1 53px;
+}
+.inicio-flexbox12-item1 {
+  display: flex;
+  flex: 0 0 auto;
+  min-width: 27px;
+}
+.inicio-txt33 {
+  display: flex;
+  justify-content: flex-end;
+  font: 14px/1.7142857143 Titillium Web, Helvetica, Arial, serif;
+  color: white;
+  text-align: right;
+  letter-spacing: 0;
+}
+.inicio-txt33-posize {
+  position: relative;
+  height: min-content;
+  width: fit-content;
+  margin: 0px 0px 0px auto;
+}
+.inicio-flexbox12-space1 {
+  display: flex;
+  flex: 1 1 65px;
+}
+.inicio-flexbox12-item2 {
+  display: flex;
+  flex: 0 0 auto;
+  min-width: 27px;
+}
+.inicio-txt34 {
+  display: flex;
+  justify-content: flex-end;
+  font: 14px/1.7142857143 Titillium Web, Helvetica, Arial, serif;
+  color: white;
+  text-align: right;
+  letter-spacing: 0;
+}
+.inicio-txt34-posize {
+  position: relative;
+  height: min-content;
+  width: fit-content;
+  margin: 0px 0px 0px auto;
+}
+.inicio-flexbox12-space2 {
+  display: flex;
+  flex: 1 1 65px;
+}
+.inicio-flexbox12-item3 {
+  display: flex;
+  flex: 0 0 auto;
+  min-width: 27px;
+}
+.inicio-txt35 {
+  display: flex;
+  justify-content: flex-end;
+  font: 14px/1.7142857143 Titillium Web, Helvetica, Arial, serif;
+  color: white;
+  text-align: right;
+  letter-spacing: 0;
+}
+.inicio-txt35-posize {
+  position: relative;
+  height: min-content;
+  width: fit-content;
+  margin: 0px 0px 0px auto;
+}
+.inicio-flexbox13 {
+  display: flex;
+  flex: 0 0 auto;
+}
+.inicio-flexbox13-posize {
+  position: relative;
+  min-height: 24px;
+  margin: 14px 24px 4px 25px;
+}
+.inicio-flexbox13-item {
+  display: flex;
+  flex: 0 0 auto;
+  min-width: 56px;
+}
+.inicio-txt36 {
+  font: 600 14px/1.7142857143 Titillium Web, Helvetica, Arial, serif;
+  color: white;
+  text-align: justify;
+  letter-spacing: 0;
+}
+.inicio-txt36-posize {
+  position: relative;
+  height: min-content;
+  width: fit-content;
+  margin: 0px;
+}
+.inicio-flexbox13-space {
+  display: flex;
+  flex: 0 1 53px;
+}
+.inicio-flexbox13-item1 {
+  display: flex;
+  flex: 0 0 auto;
+  min-width: 27px;
+}
+.inicio-txt37 {
+  display: flex;
+  justify-content: flex-end;
+  font: 14px/1.7142857143 Titillium Web, Helvetica, Arial, serif;
+  color: white;
+  text-align: right;
+  letter-spacing: 0;
+}
+.inicio-txt37-posize {
+  position: relative;
+  height: min-content;
+  width: fit-content;
+  margin: 0px 0px 0px auto;
+}
+.inicio-flexbox13-space1 {
+  display: flex;
+  flex: 1 1 65px;
+}
+.inicio-flexbox13-item2 {
+  display: flex;
+  flex: 0 0 auto;
+  min-width: 27px;
+}
+.inicio-txt38 {
+  display: flex;
+  justify-content: flex-end;
+  font: 14px/1.7142857143 Titillium Web, Helvetica, Arial, serif;
+  color: white;
+  text-align: right;
+  letter-spacing: 0;
+}
+.inicio-txt38-posize {
+  position: relative;
+  height: min-content;
+  width: fit-content;
+  margin: 0px 0px 0px auto;
+}
+.inicio-flexbox13-space2 {
+  display: flex;
+  flex: 1 1 65px;
+}
+.inicio-flexbox13-item3 {
+  display: flex;
+  flex: 0 0 auto;
+  min-width: 27px;
+}
+.inicio-txt39 {
+  display: flex;
+  justify-content: flex-end;
+  font: 14px/1.7142857143 Titillium Web, Helvetica, Arial, serif;
+  color: white;
+  text-align: right;
+  letter-spacing: 0;
+}
+.inicio-txt39-posize {
+  position: relative;
+  height: min-content;
+  width: fit-content;
+  margin: 0px 0px 0px auto;
+}
+.inicio-flexbox14 {
+  display: flex;
+  flex: 0 0 auto;
+}
+.inicio-flexbox14-posize {
+  position: relative;
+  min-height: 24px;
+  margin: 14px 24px 4px 25px;
+}
+.inicio-flexbox14-item {
+  display: flex;
+  flex: 0 0 auto;
+  min-width: 56px;
+}
+.inicio-txt40 {
+  font: 600 14px/1.7142857143 Titillium Web, Helvetica, Arial, serif;
+  color: white;
+  text-align: justify;
+  letter-spacing: 0;
+}
+.inicio-txt40-posize {
+  position: relative;
+  height: min-content;
+  width: fit-content;
+  margin: 0px;
+}
+.inicio-flexbox14-space {
+  display: flex;
+  flex: 0 1 53px;
+}
+.inicio-flexbox14-item1 {
+  display: flex;
+  flex: 0 0 auto;
+  min-width: 27px;
+}
+.inicio-txt41 {
+  display: flex;
+  justify-content: flex-end;
+  font: 14px/1.7142857143 Titillium Web, Helvetica, Arial, serif;
+  color: white;
+  text-align: right;
+  letter-spacing: 0;
+}
+.inicio-txt41-posize {
+  position: relative;
+  height: min-content;
+  width: fit-content;
+  margin: 0px 0px 0px auto;
+}
+.inicio-flexbox14-space1 {
+  display: flex;
+  flex: 1 1 65px;
+}
+.inicio-flexbox14-item2 {
+  display: flex;
+  flex: 0 0 auto;
+  min-width: 27px;
+}
+.inicio-txt42 {
+  display: flex;
+  justify-content: flex-end;
+  font: 14px/1.7142857143 Titillium Web, Helvetica, Arial, serif;
+  color: white;
+  text-align: right;
+  letter-spacing: 0;
+}
+.inicio-txt42-posize {
+  position: relative;
+  height: min-content;
+  width: fit-content;
+  margin: 0px 0px 0px auto;
+}
+.inicio-flexbox14-space2 {
+  display: flex;
+  flex: 1 1 65px;
+}
+.inicio-flexbox14-item3 {
+  display: flex;
+  flex: 0 0 auto;
+  min-width: 27px;
+}
+.inicio-txt43 {
+  display: flex;
+  justify-content: flex-end;
+  font: 14px/1.7142857143 Titillium Web, Helvetica, Arial, serif;
+  color: white;
+  text-align: right;
+  letter-spacing: 0;
+}
+.inicio-txt43-posize {
+  position: relative;
+  height: min-content;
+  width: fit-content;
+  margin: 0px 0px 0px auto;
+}
+.inicio-flexbox15 {
+  display: flex;
+  flex: 0 0 auto;
+}
+.inicio-flexbox15-posize {
+  position: relative;
+  min-height: 24px;
+  margin: 14px 24px 4px 25px;
+}
+.inicio-flexbox15-item {
+  display: flex;
+  flex: 0 0 auto;
+  min-width: 56px;
+}
+.inicio-txt44 {
+  font: 600 14px/1.7142857143 Titillium Web, Helvetica, Arial, serif;
+  color: white;
+  text-align: justify;
+  letter-spacing: 0;
+}
+.inicio-txt44-posize {
+  position: relative;
+  height: min-content;
+  width: fit-content;
+  margin: 0px;
+}
+.inicio-flexbox15-space {
+  display: flex;
+  flex: 0 1 53px;
+}
+.inicio-flexbox15-item1 {
+  display: flex;
+  flex: 0 0 auto;
+  min-width: 27px;
+}
+.inicio-txt45 {
+  display: flex;
+  justify-content: flex-end;
+  font: 14px/1.7142857143 Titillium Web, Helvetica, Arial, serif;
+  color: white;
+  text-align: right;
+  letter-spacing: 0;
+}
+.inicio-txt45-posize {
+  position: relative;
+  height: min-content;
+  width: fit-content;
+  margin: 0px 0px 0px auto;
+}
+.inicio-flexbox15-space1 {
+  display: flex;
+  flex: 1 1 65px;
+}
+.inicio-flexbox15-item2 {
+  display: flex;
+  flex: 0 0 auto;
+  min-width: 27px;
+}
+.inicio-txt46 {
+  display: flex;
+  justify-content: flex-end;
+  font: 14px/1.7142857143 Titillium Web, Helvetica, Arial, serif;
+  color: white;
+  text-align: right;
+  letter-spacing: 0;
+}
+.inicio-txt46-posize {
+  position: relative;
+  height: min-content;
+  width: fit-content;
+  margin: 0px 0px 0px auto;
+}
+.inicio-flexbox15-space2 {
+  display: flex;
+  flex: 1 1 65px;
+}
+.inicio-flexbox15-item3 {
+  display: flex;
+  flex: 0 0 auto;
+  min-width: 27px;
+}
+.inicio-txt47 {
+  display: flex;
+  justify-content: flex-end;
+  font: 14px/1.7142857143 Titillium Web, Helvetica, Arial, serif;
+  color: white;
+  text-align: right;
+  letter-spacing: 0;
+}
+.inicio-txt47-posize {
+  position: relative;
+  height: min-content;
+  width: fit-content;
+  margin: 0px 0px 0px auto;
+}
+.inicio-flexbox16 {
+  display: flex;
+  flex: 0 0 auto;
+}
+.inicio-flexbox16-posize {
+  position: relative;
+  min-height: 24px;
+  margin: 14px 24px 4px 25px;
+}
+.inicio-flexbox16-item {
+  display: flex;
+  flex: 0 0 auto;
+  min-width: 56px;
+}
+.inicio-txt48 {
+  font: 600 14px/1.7142857143 Titillium Web, Helvetica, Arial, serif;
+  color: white;
+  text-align: justify;
+  letter-spacing: 0;
+}
+.inicio-txt48-posize {
+  position: relative;
+  height: min-content;
+  width: fit-content;
+  margin: 0px;
+}
+.inicio-flexbox16-space {
+  display: flex;
+  flex: 0 1 53px;
+}
+.inicio-flexbox16-item1 {
+  display: flex;
+  flex: 0 0 auto;
+  min-width: 27px;
+}
+.inicio-txt49 {
+  display: flex;
+  justify-content: flex-end;
+  font: 14px/1.7142857143 Titillium Web, Helvetica, Arial, serif;
+  color: white;
+  text-align: right;
+  letter-spacing: 0;
+}
+.inicio-txt49-posize {
+  position: relative;
+  height: min-content;
+  width: fit-content;
+  margin: 0px 0px 0px auto;
+}
+.inicio-flexbox16-space1 {
+  display: flex;
+  flex: 1 1 65px;
+}
+.inicio-flexbox16-item2 {
+  display: flex;
+  flex: 0 0 auto;
+  min-width: 27px;
+}
+.inicio-txt50 {
+  display: flex;
+  justify-content: flex-end;
+  font: 14px/1.7142857143 Titillium Web, Helvetica, Arial, serif;
+  color: white;
+  text-align: right;
+  letter-spacing: 0;
+}
+.inicio-txt50-posize {
+  position: relative;
+  height: min-content;
+  width: fit-content;
+  margin: 0px 0px 0px auto;
+}
+.inicio-flexbox16-space2 {
+  display: flex;
+  flex: 1 1 65px;
+}
+.inicio-flexbox16-item3 {
+  display: flex;
+  flex: 0 0 auto;
+  min-width: 27px;
+}
+.inicio-txt51 {
+  display: flex;
+  justify-content: flex-end;
+  font: 14px/1.7142857143 Titillium Web, Helvetica, Arial, serif;
+  color: white;
+  text-align: right;
+  letter-spacing: 0;
+}
+.inicio-txt51-posize {
+  position: relative;
+  height: min-content;
+  width: fit-content;
+  margin: 0px 0px 0px auto;
+}
+.inicio-flexbox17 {
+  display: flex;
+  flex: 0 0 auto;
+}
+.inicio-flexbox17-posize {
+  position: relative;
+  min-height: 24px;
+  margin: 14px 24px 4px 25px;
+}
+.inicio-flexbox17-item {
+  display: flex;
+  flex: 0 0 auto;
+  min-width: 56px;
+}
+.inicio-txt52 {
+  font: 600 14px/1.7142857143 Titillium Web, Helvetica, Arial, serif;
+  color: white;
+  text-align: justify;
+  letter-spacing: 0;
+}
+.inicio-txt52-posize {
+  position: relative;
+  height: min-content;
+  width: fit-content;
+  margin: 0px;
+}
+.inicio-flexbox17-space {
+  display: flex;
+  flex: 0 1 53px;
+}
+.inicio-flexbox17-item1 {
+  display: flex;
+  flex: 0 0 auto;
+  min-width: 27px;
+}
+.inicio-txt53 {
+  display: flex;
+  justify-content: flex-end;
+  font: 14px/1.7142857143 Titillium Web, Helvetica, Arial, serif;
+  color: white;
+  text-align: right;
+  letter-spacing: 0;
+}
+.inicio-txt53-posize {
+  position: relative;
+  height: min-content;
+  width: fit-content;
+  margin: 0px 0px 0px auto;
+}
+.inicio-flexbox17-space1 {
+  display: flex;
+  flex: 1 1 65px;
+}
+.inicio-flexbox17-item2 {
+  display: flex;
+  flex: 0 0 auto;
+  min-width: 27px;
+}
+.inicio-txt54 {
+  display: flex;
+  justify-content: flex-end;
+  font: 14px/1.7142857143 Titillium Web, Helvetica, Arial, serif;
+  color: white;
+  text-align: right;
+  letter-spacing: 0;
+}
+.inicio-txt54-posize {
+  position: relative;
+  height: min-content;
+  width: fit-content;
+  margin: 0px 0px 0px auto;
+}
+.inicio-flexbox17-space2 {
+  display: flex;
+  flex: 1 1 65px;
+}
+.inicio-flexbox17-item3 {
+  display: flex;
+  flex: 0 0 auto;
+  min-width: 27px;
+}
+.inicio-txt55 {
+  display: flex;
+  justify-content: flex-end;
+  font: 14px/1.7142857143 Titillium Web, Helvetica, Arial, serif;
+  color: white;
+  text-align: right;
+  letter-spacing: 0;
+}
+.inicio-txt55-posize {
+  position: relative;
+  height: min-content;
+  width: fit-content;
+  margin: 0px 0px 0px auto;
+}
+.inicio-flexbox18 {
+  display: flex;
+  flex: 0 0 auto;
+}
+.inicio-flexbox18-posize {
+  position: relative;
+  min-height: 24px;
+  margin: 14px 24px 4px 25px;
+}
+.inicio-flexbox18-item {
+  display: flex;
+  flex: 0 0 auto;
+  min-width: 56px;
+}
+.inicio-txt56 {
+  font: 600 14px/1.7142857143 Titillium Web, Helvetica, Arial, serif;
+  color: white;
+  text-align: justify;
+  letter-spacing: 0;
+}
+.inicio-txt56-posize {
+  position: relative;
+  height: min-content;
+  width: fit-content;
+  margin: 0px;
+}
+.inicio-flexbox18-space {
+  display: flex;
+  flex: 0 1 53px;
+}
+.inicio-flexbox18-item1 {
+  display: flex;
+  flex: 0 0 auto;
+  min-width: 27px;
+}
+.inicio-txt57 {
+  display: flex;
+  justify-content: flex-end;
+  font: 14px/1.7142857143 Titillium Web, Helvetica, Arial, serif;
+  color: white;
+  text-align: right;
+  letter-spacing: 0;
+}
+.inicio-txt57-posize {
+  position: relative;
+  height: min-content;
+  width: fit-content;
+  margin: 0px 0px 0px auto;
+}
+.inicio-flexbox18-space1 {
+  display: flex;
+  flex: 1 1 65px;
+}
+.inicio-flexbox18-item2 {
+  display: flex;
+  flex: 0 0 auto;
+  min-width: 27px;
+}
+.inicio-txt58 {
+  display: flex;
+  justify-content: flex-end;
+  font: 14px/1.7142857143 Titillium Web, Helvetica, Arial, serif;
+  color: white;
+  text-align: right;
+  letter-spacing: 0;
+}
+.inicio-txt58-posize {
+  position: relative;
+  height: min-content;
+  width: fit-content;
+  margin: 0px 0px 0px auto;
+}
+.inicio-flexbox18-space2 {
+  display: flex;
+  flex: 1 1 65px;
+}
+.inicio-flexbox18-item3 {
+  display: flex;
+  flex: 0 0 auto;
+  min-width: 27px;
+}
+.inicio-txt59 {
+  display: flex;
+  justify-content: flex-end;
+  font: 14px/1.7142857143 Titillium Web, Helvetica, Arial, serif;
+  color: white;
+  text-align: right;
+  letter-spacing: 0;
+}
+.inicio-txt59-posize {
+  position: relative;
+  height: min-content;
+  width: fit-content;
+  margin: 0px 0px 0px auto;
+}
+.inicio-flexbox19 {
+  display: flex;
+  flex: 0 0 auto;
+}
+.inicio-flexbox19-posize {
+  position: relative;
+  min-height: 24px;
+  margin: 14px 24px 4px 25px;
+}
+.inicio-flexbox19-item {
+  display: flex;
+  flex: 0 0 auto;
+  min-width: 56px;
+}
+.inicio-txt60 {
+  font: 600 14px/1.7142857143 Titillium Web, Helvetica, Arial, serif;
+  color: white;
+  text-align: justify;
+  letter-spacing: 0;
+}
+.inicio-txt60-posize {
+  position: relative;
+  height: min-content;
+  width: fit-content;
+  margin: 0px;
+}
+.inicio-flexbox19-space {
+  display: flex;
+  flex: 0 1 53px;
+}
+.inicio-flexbox19-item1 {
+  display: flex;
+  flex: 0 0 auto;
+  min-width: 27px;
+}
+.inicio-txt61 {
+  display: flex;
+  justify-content: flex-end;
+  font: 14px/1.7142857143 Titillium Web, Helvetica, Arial, serif;
+  color: white;
+  text-align: right;
+  letter-spacing: 0;
+}
+.inicio-txt61-posize {
+  position: relative;
+  height: min-content;
+  width: fit-content;
+  margin: 0px 0px 0px auto;
+}
+.inicio-flexbox19-space1 {
+  display: flex;
+  flex: 1 1 65px;
+}
+.inicio-flexbox19-item2 {
+  display: flex;
+  flex: 0 0 auto;
+  min-width: 27px;
+}
+.inicio-txt62 {
+  display: flex;
+  justify-content: flex-end;
+  font: 14px/1.7142857143 Titillium Web, Helvetica, Arial, serif;
+  color: white;
+  text-align: right;
+  letter-spacing: 0;
+}
+.inicio-txt62-posize {
+  position: relative;
+  height: min-content;
+  width: fit-content;
+  margin: 0px 0px 0px auto;
+}
+.inicio-flexbox19-space2 {
+  display: flex;
+  flex: 1 1 65px;
+}
+.inicio-flexbox19-item3 {
+  display: flex;
+  flex: 0 0 auto;
+  min-width: 27px;
+}
+.inicio-txt63 {
+  display: flex;
+  justify-content: flex-end;
+  font: 14px/1.7142857143 Titillium Web, Helvetica, Arial, serif;
+  color: white;
+  text-align: right;
+  letter-spacing: 0;
+}
+.inicio-txt63-posize {
+  position: relative;
+  height: min-content;
+  width: fit-content;
+  margin: 0px 0px 0px auto;
+}
+.inicio-flexbox20 {
+  display: flex;
+  flex: 0 0 auto;
+}
+.inicio-flexbox20-posize {
+  position: relative;
+  min-height: 24px;
+  margin: 14px 24px 4px 25px;
+}
+.inicio-flexbox20-item {
+  display: flex;
+  flex: 0 0 auto;
+  min-width: 56px;
+}
+.inicio-txt64 {
+  font: 600 14px/1.7142857143 Titillium Web, Helvetica, Arial, serif;
+  color: white;
+  text-align: justify;
+  letter-spacing: 0;
+}
+.inicio-txt64-posize {
+  position: relative;
+  height: min-content;
+  width: fit-content;
+  margin: 0px;
+}
+.inicio-flexbox20-space {
+  display: flex;
+  flex: 0 1 53px;
+}
+.inicio-flexbox20-item1 {
+  display: flex;
+  flex: 0 0 auto;
+  min-width: 27px;
+}
+.inicio-txt65 {
+  display: flex;
+  justify-content: flex-end;
+  font: 14px/1.7142857143 Titillium Web, Helvetica, Arial, serif;
+  color: white;
+  text-align: right;
+  letter-spacing: 0;
+}
+.inicio-txt65-posize {
+  position: relative;
+  height: min-content;
+  width: fit-content;
+  margin: 0px 0px 0px auto;
+}
+.inicio-flexbox20-space1 {
+  display: flex;
+  flex: 1 1 65px;
+}
+.inicio-flexbox20-item2 {
+  display: flex;
+  flex: 0 0 auto;
+  min-width: 27px;
+}
+.inicio-txt66 {
+  display: flex;
+  justify-content: flex-end;
+  font: 14px/1.7142857143 Titillium Web, Helvetica, Arial, serif;
+  color: white;
+  text-align: right;
+  letter-spacing: 0;
+}
+.inicio-txt66-posize {
+  position: relative;
+  height: min-content;
+  width: fit-content;
+  margin: 0px 0px 0px auto;
+}
+.inicio-flexbox20-space2 {
+  display: flex;
+  flex: 1 1 65px;
+}
+.inicio-flexbox20-item3 {
+  display: flex;
+  flex: 0 0 auto;
+  min-width: 27px;
+}
+.inicio-txt67 {
+  display: flex;
+  justify-content: flex-end;
+  font: 14px/1.7142857143 Titillium Web, Helvetica, Arial, serif;
+  color: white;
+  text-align: right;
+  letter-spacing: 0;
+}
+.inicio-txt67-posize {
+  position: relative;
+  height: min-content;
+  width: fit-content;
+  margin: 0px 0px 0px auto;
+}
+.inicio-line-posize14 {
+  position: relative;
+  height: 1px;
+  margin: 4px 16px 46px 17px;
+}
+.inicio-flexbox3-item1 {
+  display: flex;
+  flex: 6;
+}
+.inicio-group-posize1 {
+  position: relative;
+  height: min-content;
+  min-height: 1000px;
+  flex-grow: 1;
+  margin: 40px 0px;
+}
+.inicio-flexbox3-item2 {
+  display: flex;
+  flex: 1.5;
+}
+.inicio-group2 {
+  display: flex;
+  background-color: #131316;
+}
+.inicio-group2-posize {
+  position: relative;
+  height: min-content;
+  min-height: 1000px;
+  flex-grow: 1;
+  margin: 40px 0px;
+}
+.inicio-flexbox21 {
+  display: flex;
+  flex-direction: column;
+  background-color: #131316;
+}
+.inicio-flexbox21-posize {
+  position: relative;
+  height: min-content;
+  flex-grow: 1;
+  margin: 0px;
+}
+.inicio-flexbox22 {
+  display: flex;
+  background-color: rgba(0, 0, 0, 0.4823529412);
+  border-radius: 12px 12px 12px 12px;
+  flex: 0 0 auto;
+}
+.inicio-flexbox22-posize {
+  position: relative;
+  min-height: 140px;
+  margin: 16px 16px 8px;
+}
+.inicio-flexbox22-space {
+  display: flex;
+  flex: 0 0 auto;
+  min-width: 16px;
+}
+.inicio-icon-posize2 {
+  position: relative;
+  height: 40px;
+  width: 40px;
+  min-width: 40px;
+  margin: 16px 0px 84px;
+}
+.inicio-flexbox22-item {
+  display: flex;
+  flex: 1 1 249px;
+}
+.inicio-flexbox23 {
+  display: flex;
+  flex-direction: column;
+}
+.inicio-flexbox23-posize {
+  position: relative;
+  height: min-content;
+  flex-grow: 1;
+  margin: 16px 0px;
+}
+.inicio-flexbox23-item {
+  display: flex;
+  flex: 0 0 auto;
+}
+.inicio-txt68-box-posize {
+  position: relative;
+  height: min-content;
+  width: fit-content;
+  margin: 0px;
+}
+.inicio-txt68 {
+  overflow: visible;
+  margin-top: 0px;
+  margin-bottom: 0px;
+  font: undefined 16px/1.75 Roboto, Helvetica, Arial, serif;
+  color: black;
+  text-align: justify;
+  letter-spacing: 0;
+  white-space: pre-wrap;
+}
+.inicio-txt68-span0 {
+  font: 600 1em/1.75 Titillium Web, Helvetica, Arial, serif;
+  color: #40fecbff;
+  letter-spacing: 0;
+}
+.inicio-txt68-span1 {
+  font: 600 1em/1.75 Titillium Web, Helvetica, Arial, serif;
+  color: #ffffffff;
+  letter-spacing: 0;
+}
+.inicio-txt68-span2 {
+  font: 1em/1.75 Titillium Web, Helvetica, Arial, serif;
+  color: #ffffffff;
+  letter-spacing: 0;
+}
+.inicio-txt69-box {
+  flex: 0 0 auto;
+}
+.inicio-txt69-box-posize {
+  position: relative;
+  height: min-content;
+  margin: 0px;
+}
+.inicio-txt69 {
+  overflow: visible;
+  margin-top: 0px;
+  margin-bottom: 0px;
+  margin: 0px;
+  font: 12px/1.6666666667 Titillium Web, Helvetica, Arial, serif;
+  color: white;
+  text-align: justify;
+  letter-spacing: 0;
+  white-space: pre-wrap;
+}
+.inicio-flexbox24 {
+  display: flex;
+  background-color: rgba(0, 0, 0, 0.4823529412);
+  border-radius: 12px 12px 12px 12px;
+  flex: 0 0 auto;
+}
+.inicio-flexbox24-posize {
+  position: relative;
+  min-height: 140px;
+  margin: 8px 16px;
+}
+.inicio-flexbox24-space {
+  display: flex;
+  flex: 0 0 auto;
+  min-width: 16px;
+}
+.inicio-icon-posize3 {
+  position: relative;
+  height: 40px;
+  width: 40px;
+  min-width: 40px;
+  margin: 16px 0px 84px;
+}
+.inicio-flexbox24-item {
+  display: flex;
+  flex: 1 1 249px;
+}
+.inicio-flexbox25 {
+  display: flex;
+  flex-direction: column;
+}
+.inicio-flexbox25-posize {
+  position: relative;
+  height: min-content;
+  flex-grow: 1;
+  margin: 16px 0px;
+}
+.inicio-flexbox25-item {
+  display: flex;
+  flex: 0 0 auto;
+}
+.inicio-txt70-box-posize {
+  position: relative;
+  height: min-content;
+  width: fit-content;
+  margin: 0px;
+}
+.inicio-txt70 {
+  overflow: visible;
+  margin-top: 0px;
+  margin-bottom: 0px;
+  font: undefined 16px/1.75 Roboto, Helvetica, Arial, serif;
+  color: black;
+  text-align: justify;
+  letter-spacing: 0;
+  white-space: pre-wrap;
+}
+.inicio-txt70-span0 {
+  font: 600 1em/1.75 Titillium Web, Helvetica, Arial, serif;
+  color: #40fecbff;
+  letter-spacing: 0;
+}
+.inicio-txt70-span1 {
+  font: 600 1em/1.75 Titillium Web, Helvetica, Arial, serif;
+  color: #ffffffff;
+  letter-spacing: 0;
+}
+.inicio-txt70-span2 {
+  font: 1em/1.75 Titillium Web, Helvetica, Arial, serif;
+  color: #ffffffff;
+  letter-spacing: 0;
+}
+.inicio-txt71-box {
+  flex: 0 0 auto;
+}
+.inicio-txt71-box-posize {
+  position: relative;
+  height: min-content;
+  margin: 0px;
+}
+.inicio-txt71 {
+  overflow: visible;
+  margin-top: 0px;
+  margin-bottom: 0px;
+  margin: 0px;
+  font: 12px/1.6666666667 Titillium Web, Helvetica, Arial, serif;
+  color: white;
+  text-align: justify;
+  letter-spacing: 0;
+  white-space: pre-wrap;
+}
+.inicio-flexbox26 {
+  display: flex;
+  background-color: rgba(0, 0, 0, 0.4823529412);
+  border-radius: 12px 12px 12px 12px;
+  flex: 0 0 auto;
+}
+.inicio-flexbox26-posize {
+  position: relative;
+  min-height: 140px;
+  margin: 8px 16px;
+}
+.inicio-flexbox26-space {
+  display: flex;
+  flex: 0 0 auto;
+  min-width: 16px;
+}
+.inicio-icon-posize4 {
+  position: relative;
+  height: 40px;
+  width: 40px;
+  min-width: 40px;
+  margin: 16px 0px 84px;
+}
+.inicio-flexbox26-item {
+  display: flex;
+  flex: 1 1 249px;
+}
+.inicio-flexbox27 {
+  display: flex;
+  flex-direction: column;
+}
+.inicio-flexbox27-posize {
+  position: relative;
+  height: min-content;
+  flex-grow: 1;
+  margin: 16px 0px;
+}
+.inicio-flexbox27-item {
+  display: flex;
+  flex: 0 0 auto;
+}
+.inicio-txt72-box-posize {
+  position: relative;
+  height: min-content;
+  width: fit-content;
+  margin: 0px;
+}
+.inicio-txt72 {
+  overflow: visible;
+  margin-top: 0px;
+  margin-bottom: 0px;
+  font: undefined 16px/1.75 Roboto, Helvetica, Arial, serif;
+  color: black;
+  text-align: justify;
+  letter-spacing: 0;
+  white-space: pre-wrap;
+}
+.inicio-txt72-span0 {
+  font: 600 1em/1.75 Titillium Web, Helvetica, Arial, serif;
+  color: #40fecbff;
+  letter-spacing: 0;
+}
+.inicio-txt72-span1 {
+  font: 600 1em/1.75 Titillium Web, Helvetica, Arial, serif;
+  color: #ffffffff;
+  letter-spacing: 0;
+}
+.inicio-txt72-span2 {
+  font: 1em/1.75 Titillium Web, Helvetica, Arial, serif;
+  color: #ffffffff;
+  letter-spacing: 0;
+}
+.inicio-txt73-box {
+  flex: 0 0 auto;
+}
+.inicio-txt73-box-posize {
+  position: relative;
+  height: min-content;
+  margin: 0px;
+}
+.inicio-txt73 {
+  overflow: visible;
+  margin-top: 0px;
+  margin-bottom: 0px;
+  margin: 0px;
+  font: 12px/1.6666666667 Titillium Web, Helvetica, Arial, serif;
+  color: white;
+  text-align: justify;
+  letter-spacing: 0;
+  white-space: pre-wrap;
+}
+.inicio-flexbox28 {
+  display: flex;
+  background-color: rgba(0, 0, 0, 0.4823529412);
+  border-radius: 12px 12px 12px 12px;
+  flex: 0 0 auto;
+}
+.inicio-flexbox28-posize {
+  position: relative;
+  min-height: 140px;
+  margin: 8px 16px;
+}
+.inicio-flexbox28-space {
+  display: flex;
+  flex: 0 0 auto;
+  min-width: 16px;
+}
+.inicio-icon-posize5 {
+  position: relative;
+  height: 40px;
+  width: 40px;
+  min-width: 40px;
+  margin: 16px 0px 84px;
+}
+.inicio-flexbox28-item {
+  display: flex;
+  flex: 1 1 249px;
+}
+.inicio-flexbox29 {
+  display: flex;
+  flex-direction: column;
+}
+.inicio-flexbox29-posize {
+  position: relative;
+  height: min-content;
+  flex-grow: 1;
+  margin: 16px 0px;
+}
+.inicio-flexbox29-item {
+  display: flex;
+  flex: 0 0 auto;
+}
+.inicio-txt74-box-posize {
+  position: relative;
+  height: min-content;
+  width: fit-content;
+  margin: 0px;
+}
+.inicio-txt74 {
+  overflow: visible;
+  margin-top: 0px;
+  margin-bottom: 0px;
+  font: undefined 16px/1.75 Roboto, Helvetica, Arial, serif;
+  color: black;
+  text-align: justify;
+  letter-spacing: 0;
+  white-space: pre-wrap;
+}
+.inicio-txt74-span0 {
+  font: 600 1em/1.75 Titillium Web, Helvetica, Arial, serif;
+  color: #40fecbff;
+  letter-spacing: 0;
+}
+.inicio-txt74-span1 {
+  font: 600 1em/1.75 Titillium Web, Helvetica, Arial, serif;
+  color: #ffffffff;
+  letter-spacing: 0;
+}
+.inicio-txt74-span2 {
+  font: 1em/1.75 Titillium Web, Helvetica, Arial, serif;
+  color: #ffffffff;
+  letter-spacing: 0;
+}
+.inicio-txt75-box {
+  flex: 0 0 auto;
+}
+.inicio-txt75-box-posize {
+  position: relative;
+  height: min-content;
+  margin: 0px;
+}
+.inicio-txt75 {
+  overflow: visible;
+  margin-top: 0px;
+  margin-bottom: 0px;
+  margin: 0px;
+  font: 12px/1.6666666667 Titillium Web, Helvetica, Arial, serif;
+  color: white;
+  text-align: justify;
+  letter-spacing: 0;
+  white-space: pre-wrap;
+}
+.inicio-flexbox30 {
+  display: flex;
+  background-color: rgba(0, 0, 0, 0.4823529412);
+  border-radius: 12px 12px 12px 12px;
+  flex: 0 0 auto;
+}
+.inicio-flexbox30-posize {
+  position: relative;
+  min-height: 140px;
+  margin: 8px 16px;
+}
+.inicio-flexbox30-space {
+  display: flex;
+  flex: 0 0 auto;
+  min-width: 16px;
+}
+.inicio-icon-posize6 {
+  position: relative;
+  height: 40px;
+  width: 40px;
+  min-width: 40px;
+  margin: 16px 0px 84px;
+}
+.inicio-flexbox30-item {
+  display: flex;
+  flex: 1 1 249px;
+}
+.inicio-flexbox31 {
+  display: flex;
+  flex-direction: column;
+}
+.inicio-flexbox31-posize {
+  position: relative;
+  height: min-content;
+  flex-grow: 1;
+  margin: 16px 0px;
+}
+.inicio-flexbox31-item {
+  display: flex;
+  flex: 0 0 auto;
+}
+.inicio-txt76-box-posize {
+  position: relative;
+  height: min-content;
+  width: fit-content;
+  margin: 0px;
+}
+.inicio-txt76 {
+  overflow: visible;
+  margin-top: 0px;
+  margin-bottom: 0px;
+  font: undefined 16px/1.75 Roboto, Helvetica, Arial, serif;
+  color: black;
+  text-align: justify;
+  letter-spacing: 0;
+  white-space: pre-wrap;
+}
+.inicio-txt76-span0 {
+  font: 600 1em/1.75 Titillium Web, Helvetica, Arial, serif;
+  color: #40fecbff;
+  letter-spacing: 0;
+}
+.inicio-txt76-span1 {
+  font: 600 1em/1.75 Titillium Web, Helvetica, Arial, serif;
+  color: #ffffffff;
+  letter-spacing: 0;
+}
+.inicio-txt76-span2 {
+  font: 1em/1.75 Titillium Web, Helvetica, Arial, serif;
+  color: #ffffffff;
+  letter-spacing: 0;
+}
+.inicio-txt77-box {
+  flex: 0 0 auto;
+}
+.inicio-txt77-box-posize {
+  position: relative;
+  height: min-content;
+  margin: 0px;
+}
+.inicio-txt77 {
+  overflow: visible;
+  margin-top: 0px;
+  margin-bottom: 0px;
+  margin: 0px;
+  font: 12px/1.6666666667 Titillium Web, Helvetica, Arial, serif;
+  color: white;
+  text-align: justify;
+  letter-spacing: 0;
+  white-space: pre-wrap;
+}
+.inicio-flexbox32 {
+  display: flex;
+  background-color: rgba(0, 0, 0, 0.4823529412);
+  border-radius: 12px 12px 12px 12px;
+  flex: 0 0 auto;
+}
+.inicio-flexbox32-posize {
+  position: relative;
+  min-height: 140px;
+  margin: 8px 16px;
+}
+.inicio-flexbox32-space {
+  display: flex;
+  flex: 0 0 auto;
+  min-width: 16px;
+}
+.inicio-icon-posize7 {
+  position: relative;
+  height: 40px;
+  width: 40px;
+  min-width: 40px;
+  margin: 16px 0px 84px;
+}
+.inicio-flexbox32-item {
+  display: flex;
+  flex: 1 1 249px;
+}
+.inicio-flexbox33 {
+  display: flex;
+  flex-direction: column;
+}
+.inicio-flexbox33-posize {
+  position: relative;
+  height: min-content;
+  flex-grow: 1;
+  margin: 16px 0px;
+}
+.inicio-flexbox33-item {
+  display: flex;
+  flex: 0 0 auto;
+}
+.inicio-txt78-box-posize {
+  position: relative;
+  height: min-content;
+  width: fit-content;
+  margin: 0px;
+}
+.inicio-txt78 {
+  overflow: visible;
+  margin-top: 0px;
+  margin-bottom: 0px;
+  font: undefined 16px/1.75 Roboto, Helvetica, Arial, serif;
+  color: black;
+  text-align: justify;
+  letter-spacing: 0;
+  white-space: pre-wrap;
+}
+.inicio-txt78-span0 {
+  font: 600 1em/1.75 Titillium Web, Helvetica, Arial, serif;
+  color: #40fecbff;
+  letter-spacing: 0;
+}
+.inicio-txt78-span1 {
+  font: 600 1em/1.75 Titillium Web, Helvetica, Arial, serif;
+  color: #ffffffff;
+  letter-spacing: 0;
+}
+.inicio-txt78-span2 {
+  font: 1em/1.75 Titillium Web, Helvetica, Arial, serif;
+  color: #ffffffff;
+  letter-spacing: 0;
+}
+.inicio-txt79-box {
+  flex: 0 0 auto;
+}
+.inicio-txt79-box-posize {
+  position: relative;
+  height: min-content;
+  margin: 0px;
+}
+.inicio-txt79 {
+  overflow: visible;
+  margin-top: 0px;
+  margin-bottom: 0px;
+  margin: 0px;
+  font: 12px/1.6666666667 Titillium Web, Helvetica, Arial, serif;
+  color: white;
+  text-align: justify;
+  letter-spacing: 0;
+  white-space: pre-wrap;
+}
+.inicio-group3 {
+  display: flex;
+  flex: 0 0 auto;
+}
+.inicio-group3-posize {
+  position: relative;
+  height: min-content;
+  min-height: 359px;
+  margin: 0px;
+}
+.inicio-flexbox34 {
+  display: flex;
+  background-color: #131316;
+  box-shadow: 0px 2px 4px 0px rgba(0, 0, 0, 0.062745098);
+}
+.inicio-flexbox34-posize {
+  position: relative;
+  min-height: 359px;
+  flex-grow: 1;
+  margin: 0px;
+}
+.inicio-flexbox34-space {
+  display: flex;
+  flex: 4 0 auto;
+}
+.inicio-flexbox34-item {
+  display: flex;
+  flex: 0.1 1 1022px;
+}
+.inicio-txt80-box-posize {
+  position: relative;
+  height: min-content;
+  flex-grow: 1;
+  margin: 80px 0px;
+}
+.inicio-txt80 {
+  overflow: visible;
+  margin-top: 0px;
+  margin-bottom: 0px;
+  margin: 0px;
+  font: 16px/1.75 Titillium Web, Helvetica, Arial, serif;
+  color: white;
+  text-align: justify;
+  letter-spacing: 0;
+  white-space: pre-wrap;
+}
+.inicio-flexbox34-space1 {
+  display: flex;
+  flex: 5 0 auto;
+}
+.inicio-flexbox34-item1 {
+  display: flex;
+  flex: 1 1 auto;
+}
+.inicio-flexbox35 {
+  display: flex;
+  flex-direction: column;
+}
+.inicio-flexbox35-posize {
+  position: relative;
+  height: min-content;
+  flex-grow: 1;
+  margin: 80px 0px 123px;
+}
+.inicio-flexbox35-item {
+  display: flex;
+  flex: 0 0 auto;
+}
+.inicio-txt81 {
+  display: flex;
+  align-items: center;
+  font: 600 24px/1.6666666667 Titillium Web, Helvetica, Arial, serif;
+  color: white;
+  letter-spacing: 0;
+}
+.inicio-txt81-posize {
+  position: relative;
+  height: min-content;
+  width: fit-content;
+  margin: 0px 0px 9px 2px;
+}
+.inicio-txt82 {
+  display: flex;
+  align-items: center;
+  font: 600 24px/1.6666666667 Titillium Web, Helvetica, Arial, serif;
+  color: white;
+  letter-spacing: 0;
+}
+.inicio-txt82-posize {
+  position: relative;
+  height: min-content;
+  width: fit-content;
+  margin: 9px 0px;
+}
+.inicio-txt83 {
+  display: flex;
+  align-items: center;
+  font: 600 24px/1.6666666667 Titillium Web, Helvetica, Arial, serif;
+  color: white;
+  letter-spacing: 0;
+}
+.inicio-txt83-posize {
+  position: relative;
+  height: min-content;
+  width: fit-content;
+  margin: 9px 0px 0px;
+}
+
+*,
+*::before,
+*::after {
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+}
+
+h1,h2,h3,h4,h5,h6,hr {
+  display: block;
+  font-size: 1em;
+  font-weight: normal;
+  margin: 0;
+  border-width: 0;
+}
+
+ul, ul {
+  display: block;
+  margin: 0;
+  padding: 0;
+}
+
+li {
+  display: block;
+}
+
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
+    "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
+    monospace;
+}
+
+/* fonts.css */
+@import url("https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap");
+@font-face {
+  font-family: "FontAwesome";
+  font-weight: normal;
+  font-style: normal;
+  src: url("https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/fonts/fontawesome-webfont.eot?v=4.3.0");
+  src: url("https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/fonts/fontawesome-webfont.eot?#iefix&v=4.3.0")
+      format("embedded-opentype"),
+    url("https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/fonts/fontawesome-webfont.woff2?v=4.3.0")
+      format("woff2"),
+    url("https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/fonts/fontawesome-webfont.woff?v=4.3.0")
+      format("woff"),
+    url("https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/fonts/fontawesome-webfont.ttf?v=4.3.0")
+      format("truetype"),
+    url("https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/fonts/fontawesome-webfont.svg?v=4.3.0#fontawesomeregular")
+      format("svg");
+}
+
+
+
+.grafico{
+
+  display: block;
+  margin-top:40px;
+  margin-left: auto;
+  margin-right: auto;
+  padding:20px;
+  width:80%;
+  height:80%;
+
+
+}
+
+.inicio-group-posize1{
+
+  position: relative;
+    height: min-content;
+    min-height: 1000px;
+    flex-grow: 1;
+    flex-direction: column;
+    margin: 40px 0px;
+
+}
+
+    </style>
+  </head>
+
+  <body>
+    <px-posize
+      x="0px 1920fr 0px"
+      y="0px minmax(0px, max-content) 0px"
+      track-style='{"overflow":"auto"}'
+      area-style='{"overflow":"hidden"}'
+      
+      ><div class="inicio-flexbox">
+        <div class="inicio-flexbox1 inicio-flexbox1-posize">
+          <div class="inicio-flexbox1-space"></div>
+          <div class="inicio-flexbox1-item"><img style="padding-left:30px;width:60%;" src="{% static 'Becoin_SVG\Recurso7.svg' %}"></div>
+          <div class="inicio-flexbox3-space"></div>
+          <div class="inicio-flexbox1-item"><a style="text-decoration: none;" href="/"><div class="inicio-txt inicio-txt-posize">INICIO</div></a></div>
+          <div class="inicio-flexbox1-space1"></div>
+          <div class="inicio-flexbox1-item"><a style="text-decoration: none;" href="/noticias"><div class="inicio-txt1 inicio-txt1-posize">NOTICIAS</div></a></div>
+          <div class="inicio-flexbox1-space2"></div>
+          <div class="inicio-flexbox1-item"><a style="text-decoration: none;" href="/simulador"><div class="inicio-txt3 inicio-txt3-posize">SIMULADOR</div></a></div>
+          <div class="inicio-flexbox1-space4"></div>
+
+          <div class="inicio-flexbox1-space5"></div>
+          <div
+            class="inicio-icon inicio-icon-posize1"
+          ><input style="width:100%;" type="image" data-toggle="modal" data-target="#profileModalCenter" src="{% static 'profile.png' %}" />
+
+          <!-- <button type="button" class="btn btn-secondary btn-lg btn-block" data-toggle="modal" data-target="#profileModalCenter"> <p style="align-items: center;color: rgb(64, 254, 203);"> <b>Contacto</b> </p> </button> -->
+
+<!-- Modal -->
+<div class="modal fade dark" id="profileModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content dark" style="background-color:#121215;">
+      <div class="modal-header">
+        <h1 class="modal-title" id="profileModalCenterTitle"><p style="align-items: center; color: rgb(64, 254, 203);"> <b>Perfil</b></p></h1>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span style="color:red;" aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+
+      {% for u in user %}
+        <h5><p style="align-items: center; color: rgb(64, 254, 203);"> <b>Nombre de usuario:</b></p></h5>
+        <p style="border-width: 1px; color:white; border-style: solid; border-color: white;">&nbsp;&nbsp;{{u.username}}</p>
+
+        <br><h5><p style="align-items: center; color: rgb(64, 254, 203);"> <b>Cartera:</b></p></h5>
+        <p style="border-width: 1px; color:white; border-style: solid; border-color: white;">&nbsp;&nbsp;{{u.cartera}}&nbsp;€</p>
+
+
+        <br><h5><p style="align-items: center; color: rgb(64, 254, 203);"> <b>CriptoMonedas:</b></p></h5>
+        <p style="border-width: 1px; color:white; border-style: solid; border-color: white;">&nbsp;&nbsp;Bitcoin:&nbsp;&nbsp;{{u.bitcoin}}</p>
+        <p style="border-width: 1px; color:white; border-style: solid; border-color: white;">&nbsp;&nbsp;Binance Coin:&nbsp;&nbsp;{{u.binancecoin}}</p>
+        <p style="border-width: 1px; color:white; border-style: solid; border-color: white;">&nbsp;&nbsp;Ethereum:&nbsp;&nbsp;{{u.ethereum}}</p>
+
+
+       {% endfor %}
+      </div>
+
+      <div class="modal-footer">
+        <a class="btn btn-outline-danger" role="button" href="/logout">Logout</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+          </div>
+          <div class="inicio-flexbox1-space6"></div>
+        </div>
+
+          {% if error == False %}
+
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                <strong>Enhorabuena {{  request.user.username  }}!</strong> La operación ha sido realizada con éxito.
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                      <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+
+           {% elif error == True %}
+
+
+            <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                <strong>Lo sentimos {{ request.user.username }}.</strong> La operación no ha podido ser realizada con éxito.
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                      <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+
+          {% endif %}
+
+        <div class="inicio-flexbox3 inicio-flexbox3-posize">
+          <div class="inicio-flexbox3-space"></div>
+
+
+          <div class="inicio-flexbox3-space"></div>
+          <div class="inicio-flexbox3-item1"><div class="inicio-group inicio-group-posize1">
+
+
+            <!--<img class="grafico" src="{% static 'bolsa.png' %}"> -->
+              <div>
+              <form>
+
+                    <input style="display: none;" type="checkbox" onclick="drawChart()" class="btn-check" id="Bitcoin EUR" name="Bitcoin EUR" value="Bitcoin" autocomplete="off" checked>
+                    <label class="btn btn-outline-primary" for="Bitcoin EUR">Bitcoin</label>
+
+                    <input style="display: none;" type="checkbox" onclick="drawChart()" class="btn-check" id="Ethereum EUR" name="Ethereum EUR" value="Ethereum" autocomplete="off" checked>
+                    <label class="btn btn-outline-danger" for="Ethereum EUR">Ethereum</label>
+
+                    <input style="display: none;" type="checkbox" onclick="drawChart()" class="btn-check" id="BinanceCoin EUR" name="BinanceCoin EUR" value="BinanceCoin" autocomplete="off" checked>
+                    <label class="btn btn-outline-warning" for="BinanceCoin EUR">BinanceCoin</label>
+
+                    <input style="display: none;" type="checkbox" onclick="drawChart()" class="btn-check" id="Tether EUR" name="Tether EUR" value="Tether EUR" autocomplete="off" checked>
+                    <label class="btn btn-outline-success" for="Tether EUR">Tether</label>
+
+                    <input style="display: none;" type="checkbox" onclick="drawChart()" class="btn-check" id="Dogecoin EUR" name="Dogecoin EUR" value="Dogecoin EUR" autocomplete="off" checked>
+                    <label class="btn btn-outline-info" for="Dogecoin EUR">Dogecoin</label>
+                </form>
+
+                </div><br>
+              <div id="chart_div" style="padding: 10px 10px; width: 80%; height: 800px;"></div>
+
+
+
+
+
+          </div></div>
+          <div class="inicio-flexbox3-space"></div>
+
+          <div class="inicio-flexbox3-item2">
+
+            <div class="inicio-flexbox4 inicio-flexbox4-posize">
+              <h2><p style="padding-top:10px;float:center;align-items: center; color: #40fecb;"> <b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Tabla de Transacciones:</b></p></h2>
+              <hr style="background-color: white;" class="inicio-line inicio-line-posize" />
+              <div class="inicio-flexbox4-item">
+
+                <px-posize x="112fr 233fr 24px" y="26px minmax(28px,28fr) 14px"
+                  ><div class="inicio-flexbox5">
+
+                  <div class="inicio-flexbox5-space1"></div>
+                    <div class="inicio-flexbox5-item1"><div style="color: #40fecbff;" class="inicio-txt5 inicio-txt5-posize">&nbsp;Criptomoneda</div></div>
+                  <div class="inicio-flexbox5-space"></div>
+                    <div class="inicio-flexbox5-item1"><div style="color: #40fecbff;" class="inicio-txt5 inicio-txt5-posize">&nbsp;Cantidad</div></div>
+                    <div class="inicio-flexbox5-space"></div>
+                    <div class="inicio-flexbox5-item1"><div style="color: #40fecbff;" class="inicio-txt6 inicio-txt6-posize">Precio</div></div>
+                  <div class="inicio-flexbox5-space1"></div>
+                    <div class="inicio-flexbox5-item1"><div style="color: #40fecbff;" class="inicio-txt6 inicio-txt6-posize">Tipo&nbsp;&nbsp;</div></div>
+                  </div></px-posize>
+              </div>
+
+              {% for dato in datos_transacciones %}
+
+              <div class="inicio-flexbox6 inicio-flexbox6-posize">
+                <div class="inicio-flexbox6-item"><div class="inicio-txt8 inicio-txt8-posize">{{dato.criptomoneda}}</div></div>
+                <div class="inicio-flexbox6-space"></div>
+                <div class="inicio-flexbox6-item1"><div class="inicio-txt9 inicio-txt9-posize">{{dato.cantidad}}</div></div>
+                <div class="inicio-flexbox6-space1"></div>
+                <div class="inicio-flexbox6-item2"><div class="inicio-txt10 inicio-txt10-posize">{{dato.precio}}&nbsp;€</div></div>
+                <div class="inicio-flexbox6-space"></div>
+                <div class="inicio-flexbox6-item2"><div class="inicio-txt10 inicio-txt10-posize">{{dato.tipo}}</div></div>
+              </div>
+              <hr class="inicio-line inicio-line-posize" />
+
+              {% endfor %}
+            </div>
+
+          </div>
+
+
+          <div class="inicio-flexbox3-space"></div>
+        </div>
+      <div class="simulador-bi-t-flexbox simulador-prueba">
+
+
+
+        <div class="simulador-bi-t-flexbox-item">
+          <form action="/simulador?operacion=comprar" method="post">
+              {% csrf_token %}
+          <div class="simulador-bi-t-flexbox1 simulador-bi-t-flexbox1-posize">
+            <div class="simulador-bi-t-flexbox1-item"><div class="simulador-bi-t-txt simulador-bi-t-txt-posize">Comprar</div></div>
+            <div class="simulador-bi-t-flexbox2 simulador-bi-t-flexbox2-posize">
+              <div class="simulador-bi-t-flexbox2-space"></div>
+
+              <script>
+
+                function calculoCompra() {
+
+                    resultado = parseFloat(document.getElementsByName("cantidad")[0].value);
+
+                    moneda = document.getElementsByName("cripto1")[0].value;
+                    console.log("moneda:",moneda);
+
+                    if(moneda == "Bitcoin"){
+
+                        console.log("Calculando Bitcoin");
+
+                        var bitcoin = []
+
+                        {% for datos in datos_bitcoin %}
+
+                            bitcoin.push([{{datos.precio}}])
+
+                        {% endfor %}
+
+                        var precio_actual = bitcoin[bitcoin.length - 1];
+
+                        console.log("precio bitcoin:", precio_actual);
+
+                    }else if (moneda == "BinanceCoin"){
+
+                      console.log("Calculando BinanceCoin");
+
+                        var binance = []
+
+                        {% for datos in datos_binance %}
+
+                            binance.push([{{datos.precio}}])
+
+                        {% endfor %}
+
+                        var precio_actual = binance[binance.length - 1];
+
+                        console.log("precio binance:", precio_actual);
+
+                    }else if (moneda == "Ethereum"){
+
+                      console.log("Calculando Ethereum");
+
+                        var ethereum = []
+
+                        {% for datos in datos_ethereum %}
+
+                            ethereum.push([{{datos.precio}}])
+
+                        {% endfor %}
+
+                        var precio_actual = ethereum[ethereum.length - 1];
+
+                        console.log("precio ethereum:", precio_actual);
+
+                    }
+
+                    resultado = resultado * precio_actual;
+                    console.log(resultado);
+
+                    document.getElementById("precio1").value = resultado;
+                }
+
+                function calculoVenta() {
+
+                    resultado2 = parseFloat(document.getElementsByName("cantidad2")[0].value);
+                    console.log(resultado2);
+
+                    moneda = document.getElementsByName("cripto2")[0].value;
+                    console.log("moneda:",moneda);
+
+                    if(moneda == "Bitcoin"){
+
+                        console.log("Calculando Bitcoin");
+
+                        var bitcoin = []
+
+                        {% for datos in datos_bitcoin %}
+
+                            bitcoin.push([{{datos.precio}}])
+
+                        {% endfor %}
+
+                        var precio_actual = bitcoin[bitcoin.length - 1];
+
+                        console.log("precio bitcoin:", precio_actual);
+
+                    }else if (moneda == "BinanceCoin"){
+
+                      console.log("Calculando BinanceCoin");
+
+                        var binance = []
+
+                        {% for datos in datos_binance %}
+
+                            binance.push([{{datos.precio}}])
+
+                        {% endfor %}
+
+                        var precio_actual = binance[binance.length - 1];
+
+                        console.log("precio binance:", precio_actual);
+
+                    }else if (moneda == "Ethereum"){
+
+                      console.log("Calculando Ethereum");
+
+                        var ethereum = []
+
+                        {% for datos in datos_ethereum %}
+
+                            ethereum.push([{{datos.precio}}])
+
+                        {% endfor %}
+
+                        var precio_actual = ethereum[ethereum.length - 1];
+
+                        console.log("precio ethereum:", precio_actual);
+
+                    }
+
+                    resultado2 = resultado2 * precio_actual;
+                    console.log(resultado2);
+
+                    document.getElementById("precio2").value = resultado2;
+                }
+
+
+                function calculoCompraEuros() {
+
+                    resultado = parseFloat(document.getElementsByName("euros")[0].value);
+                    console.log("euros:", resultado);
+
+                    moneda = document.getElementsByName("cripto1")[0].value;
+                    console.log("moneda:",moneda);
+
+                    if(moneda == "Bitcoin"){
+
+                        console.log("Calculando Bitcoin");
+
+                        var bitcoin = []
+
+                        {% for datos in datos_bitcoin %}
+
+                            bitcoin.push([{{datos.precio}}])
+
+                        {% endfor %}
+
+                        var precio_actual = bitcoin[bitcoin.length - 1];
+
+                        console.log("precio bitcoin:", precio_actual);
+
+                    }else if (moneda == "BinanceCoin"){
+
+                      console.log("Calculando BinanceCoin");
+
+                        var binance = []
+
+                        {% for datos in datos_binance %}
+
+                            binance.push([{{datos.precio}}])
+
+                        {% endfor %}
+
+                        var precio_actual = binance[binance.length - 1];
+
+                        console.log("precio binance:", precio_actual);
+
+                    }else if (moneda == "Ethereum"){
+
+                      console.log("Calculando Ethereum");
+
+                        var ethereum = []
+
+                        {% for datos in datos_ethereum %}
+
+                            ethereum.push([{{datos.precio}}])
+
+                        {% endfor %}
+
+                        var precio_actual = ethereum[ethereum.length - 1];
+
+                        console.log("precio ethereum:", precio_actual);
+
+                    }
+
+                    resultado = resultado / precio_actual;
+                    console.log(resultado);
+
+                    document.getElementById("cantidad").value = resultado;
+                }
+
+                function calculoVentaEuros() {
+
+                    resultado = parseFloat(document.getElementsByName("euros2")[0].value);
+                    console.log("euros:", resultado);
+
+                    moneda = document.getElementsByName("cripto2")[0].value;
+                    console.log("moneda:",moneda);
+
+                    if(moneda == "Bitcoin"){
+
+                        console.log("Calculando Bitcoin");
+
+                        var bitcoin = []
+
+                        {% for datos in datos_bitcoin %}
+
+                            bitcoin.push([{{datos.precio}}])
+
+                        {% endfor %}
+
+                        var precio_actual = bitcoin[bitcoin.length - 1];
+
+                        console.log("precio bitcoin:", precio_actual);
+
+                    }else if (moneda == "BinanceCoin"){
+
+                      console.log("Calculando BinanceCoin");
+
+                        var binance = []
+
+                        {% for datos in datos_binance %}
+
+                            binance.push([{{datos.precio}}])
+
+                        {% endfor %}
+
+                        var precio_actual = binance[binance.length - 1];
+
+                        console.log("precio binance:", precio_actual);
+
+                    }else if (moneda == "Ethereum"){
+
+                      console.log("Calculando Ethereum");
+
+                        var ethereum = []
+
+                        {% for datos in datos_ethereum %}
+
+                            ethereum.push([{{datos.precio}}])
+
+                        {% endfor %}
+
+                        var precio_actual = ethereum[ethereum.length - 1];
+
+                        console.log("precio ethereum:", precio_actual);
+
+                    }
+
+                    resultado = resultado / precio_actual;
+                    console.log(resultado);
+
+                    document.getElementById("cantidad2").value = resultado;
+                }
+
+              </script>
+
+              <div class="simulador-bi-t-flexbox2-item"><div class="simulador-bi-t-txt1 simulador-bi-t-txt1-posize"><input id="cantidad" type="number" step=any name="cantidad" placeholder="Cantidad" onchange="calculoCompra()" required></div></div>
+              <div class="simulador-bi-t-flexbox2-space1"></div>
+              <div class="simulador-bi-t-flexbox2-item1"><div class="simulador-bi-t-txt2 simulador-bi-t-txt2-posize">
+
+                <select name="cripto1" class="selectpicker" onchange="calculoCompra()">
+                  <option>Bitcoin</option>
+                  <option>BinanceCoin</option>
+                  <option>Ethereum</option>
+                </select>
+
+
+              </div></div>
+              <div class="simulador-bi-t-flexbox2-space"></div>
+            </div>
+            <div class="simulador-bi-t-flexbox3 simulador-bi-t-flexbox3-posize">
+              <div class="simulador-bi-t-flexbox3-space"></div>
+              <div class="simulador-bi-t-flexbox3-item"><div class="simulador-bi-t-txt3 simulador-bi-t-txt3-posize"><input id="precio1" type="number" step=any name="euros" placeholder="Precio" onchange="calculoCompraEuros()" required></div></div>
+              <div class="simulador-bi-t-flexbox3-space1"></div>
+              <div class="simulador-bi-t-flexbox3-item1"><div class="simulador-bi-t-txt4 simulador-bi-t-txt4-posize">EUR</div></div>
+              <div class="simulador-bi-t-flexbox3-space2"></div>
+            </div>
+            <div style="padding: 5px 30px;" class="simulador-bi-t-img simulador-bi-t-img-posize">
+
+              <input style="width:100%;" type="image" src="{% static 'confirmar.png' %}" />
+
+            </div>
+          </div>
+          </form>
+        </div>
+
+        <div class="simulador-bi-t-flexbox-space"></div>
+
+        <div class="simulador-bi-t-flexbox-item">
+
+          <form action="/simulador?operacion=vender" method="post">
+              {% csrf_token %}
+          <div class="simulador-bi-t-flexbox4 simulador-bi-t-flexbox4-posize">
+            <div class="simulador-bi-t-flexbox4-item"><div class="simulador-bi-t-txt simulador-bi-t-txt-posize">Vender</div></div>
+            <div class="simulador-bi-t-flexbox5 simulador-bi-t-flexbox5-posize">
+              <div class="simulador-bi-t-flexbox5-space"></div>
+              <div class="simulador-bi-t-flexbox5-item"><div class="simulador-bi-t-txt6 simulador-bi-t-txt6-posize"><input id="cantidad2" type="number" step=any name="cantidad2" placeholder="Cantidad" onchange="calculoVenta()" required></div></div>
+              <div class="simulador-bi-t-flexbox5-space1"></div>
+              <div class="simulador-bi-t-flexbox5-item1"><div class="simulador-bi-t-txt7 simulador-bi-t-txt7-posize">
+
+                <select name="cripto2" class="selectpicker" onchange="calculoVenta()">
+                  <option>Bitcoin</option>
+                  <option>BinanceCoin</option>
+                  <option>Ethereum</option>
+                </select>
+
+
+              </div></div>
+              <div class="simulador-bi-t-flexbox5-space"></div>
+            </div>
+
+            <div class="simulador-bi-t-flexbox6 simulador-bi-t-flexbox6-posize">
+              <div class="simulador-bi-t-flexbox6-space"></div>
+              <div class="simulador-bi-t-flexbox6-item"><div class="simulador-bi-t-txt8 simulador-bi-t-txt8-posize"><input id="precio2" type="number" step=any name="euros2" placeholder="Precio" onchange="calculoVentaEuros()" required></div></div>
+              <div class="simulador-bi-t-flexbox6-space1"></div>
+              <div class="simulador-bi-t-flexbox6-item1"><div class="simulador-bi-t-txt9 simulador-bi-t-txt9-posize">EUR</div></div>
+              <div class="simulador-bi-t-flexbox6-space2"></div>
+            </div>
+            <div style="padding: 5px 30px;" class="simulador-bi-t-img simulador-bi-t-img-posize">
+
+              <input style="width:100%;" type="image" src="{% static 'confirmar.png' %}" />
+
+            </div>
+          </div>
+          </form>
+        </div>
+
+
+      </div>
+
+
+
+        <div class="inicio-group3 inicio-group3-posize">
+          <div class="inicio-flexbox34 inicio-flexbox34-posize">
+            <div class="inicio-flexbox34-space"></div>
+            <div class="inicio-flexbox34-item">
+              <div class="inicio-txt80-box inicio-txt80-box-posize">
+                <pre class="inicio-txt80">
+<b>Aviso legal:</b> Las operaciones con instrumentos financieros o criptomonedas implican un elevado riesgo, incluyendo la pérdida parcial o total del capital invertido, y pueden no ser adecuadas para todos los inversores. Los precios de las criptomonedas son extremadamente volátiles y pueden verse afectados por factores externos de tipo financiero, regulatorio o político. Operar sobre márgenes aumenta los riesgos financieros.
+
+Team Bancarrota SL, C/ Playa de Liencres, 2 - Madrid. Bancarrota App © 2021. Todos los derechos reservados.</pre
+                >
+              </div>
+            </div>
+            <div class="inicio-flexbox34-space1"></div>
+            <div class="inicio-flexbox34-item1">
+              <div class="inicio-flexbox35 inicio-flexbox35-posize">
+                <div class="inicio-flexbox35-item">
+
+                  <button type="button" class="btn btn-outline-dark btn-lg btn-block" data-toggle="modal" data-target="#exampleModalCenter"> <p style="align-items: center;color: white;"> <b>Contacto</b> </p> </button>
+
+<!-- Modal -->
+<div class="modal fade dark" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content dark" style="background-color:#121215;">
+      <div class="modal-header">
+        <h1 class="modal-title" id="exampleModalCenterTitle"><p style="align-items: center; color: rgb(64, 254, 203);"> <b>Contacto</b></p></h1>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span style="color:red;" aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+
+        <h5><p style="align-items: center; color: rgb(64, 254, 203);"> <b>Nombre y apellido</b></p></h5>
+        <input style="background-color:#2C2C2C;" type="text">
+        <hr>
+
+        <br><h5><p style="align-items: center; color: rgb(64, 254, 203);"> <b>Correo Electrónico</b></p></h5>
+        <input style="background-color:#2C2C2C;" type="text">
+        <hr>
+
+        <br><h5><p style="align-items: center; color: rgb(64, 254, 203);"> <b>Asunto</b></p></h5>
+        <input style="background-color:#2C2C2C;" type="text">
+        <hr>
+
+        <br><h5><p style="align-items: center; color: rgb(64, 254, 203);"> <b>Mensaje</b></p></h5>
+        <textarea style="text-align:left;
+  width: 100%;
+  box-sizing: border-box;
+  border: 2px solid #DDDDDD;
+  border-radius: 4px;
+  font-size: 16px;
+  color: #DDDDDD;  background-color:#2C2C2C; height:100px; width:470px"></textarea>
+        <hr>
+
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-outline-success">Enviar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+                </div>
+                <br>
+                <div class="inicio-flexbox35-item">
+                  <button type="button" class="btn btn-outline-dark btn-lg btn-block" data-toggle="modal" data-target="#exampleModalCenter2"> <p style="align-items: center; color: white;"> <b>Preguntas frecuentes</b> </p></button>
+
+                  <!-- Modal -->
+<div class="modal fade dark" id="exampleModalCenter2" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content dark" style="background-color:#121215;">
+      <div class="modal-header">
+        <h1 class="modal-title" id="exampleModalCenterTitle2"><p style="align-items: center; color: rgb(64, 254, 203);"> <b>Preguntas Frecuentes</b></p></h1>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span style="color:red;" aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+
+        <h5><p style="align-items: center; color: rgb(64, 254, 203);"> <b>Sobre BeCoin</b></p></h5>
+        <h2><p style="align-items: center; color: white;"> <b>BeCoin es una aplicación web basada en el scrapeo y visualización de datos relacionados
+con las criptomonedas.</b></p></h2>
+        <hr>
+
+        <br><h5><p style="align-items: center; color: rgb(64, 254, 203);"> <b>¿En qué consiste el simulador?</b></p></h5>
+        <h2><p style="align-items: center; color: white;"> <b>Consiste en una sencilla interfaz de compra/venta para iniciarse en el mundo de la inversión.</b></p></h2>
+        <hr>
+
+        <br><h5><p style="align-items: center; color: rgb(64, 254, 203);"> <b>¿Qué debo hacer para poder usar el simulador?</b></p></h5>
+        <h2><p style="align-items: center; color: white;"> <b>Solamente debes registrarte e iniciar sesión para poder acceder a esta herramienta de compra/venta.<br><br>Cada usuario cuenta con una cartera virtual con un saldo inicial de 500.000 €, con la posibilidad de invertir en bitcoin, binancecoin y ethereum.</b></p></h2>
+        <hr>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+                </div>
+              </div>
+            </div>
+            <div class="inicio-flexbox34-space"></div>
+          </div>
+        </div></div
+    ></px-posize>
+  </body>
+</html>
