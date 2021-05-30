@@ -133,7 +133,9 @@ class DjangoSession(models.Model):
 
 
 class Tweet(models.Model):
-    id = models.IntegerField(primary_key=True)
+
+    #id = models.IntegerField(primary_key=True)
+    _id = models.TextField(primary_key=True)
     texto = models.TextField()
     fecha = models.TextField()
     usuario = models.TextField()
@@ -146,7 +148,9 @@ class Tweet(models.Model):
 
 
 class Noticias(models.Model):
-    id = models.IntegerField(primary_key=True)
+
+    #id = models.IntegerField(primary_key=True)
+    _id = models.TextField(primary_key=True)
     titulo = models.TextField()
     articulo = models.TextField()
     myhoras = models.TextField()

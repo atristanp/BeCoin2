@@ -24,9 +24,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'jfu1v8*8+2*44h4xynzyb=5z66zknmzetqi9x=zly*vv)n387a'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['atristan.pythonanywhere.com']
 
 
 # Application definition
@@ -76,6 +76,22 @@ WSGI_APPLICATION = 'app.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.1/ref/settings/#databases
 
+
+DATABASES = {
+
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': str(os.path.join(BASE_DIR, "proyectosIII.sqlite3"))
+    },
+
+    'mongo': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': str(os.path.join(BASE_DIR, "proyectosIII.sqlite3"))
+    },
+
+}
+
+"""
 DATABASES = {
 
     'default': {
@@ -86,8 +102,12 @@ DATABASES = {
     'mongo': {
         'ENGINE': 'djongo',
         'NAME': 'proyectosIII',
+        'CLIENT': {
+            'host': "mongodb+srv://alvaro:alvarito25@cluster0.kcrta.mongodb.net/proyectosIII?retryWrites=true&w=majority"
+        },
     }
 }
+"""
 
 
 # Password validation

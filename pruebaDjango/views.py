@@ -36,6 +36,7 @@ def home(request):
                        'user': user})
 
     tweets = Tweet.objects.using('mongo').all()[:6]
+
     # datos_bitcoin = Datos_Cripto.objects.filter(nombre__exact="Bitcoin EUR").distinct()
 
     print(tweets)
