@@ -5,6 +5,18 @@
 <html>
   <!--  This source code is exported from pxCode, you can get more document from https://www.pxcode.io  -->
   <head>
+      <!-- Global site tag (gtag.js) - Google Analytics -->
+        <script async src="https://www.googletagmanager.com/gtag/js?id=G-RT5VQ90X5K"></script>
+            <script>
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+
+            gtag('config', 'G-RT5VQ90X5K');
+        </script>
+
+    <link href="https://unpkg.com/webkul-micron@1.1.6/dist/css/micron.min.css" type="text/css" rel="stylesheet">
+    <script src="https://unpkg.com/webkul-micron@1.1.6/dist/script/micron.min.js" type="text/javascript"></script>
 
     <title>BECOIN - Bancarrota App</title>
     <link rel="icon" href="{% static 'Becoin_SVG\Recurso4.svg' %}" type="image/x-icon">
@@ -2721,7 +2733,7 @@ code {
       y="0px minmax(0px, max-content) 0px"
       track-style='{"overflow":"auto"}'
       area-style='{"overflow":"hidden"}'
-      
+
       ><div class="inicio-flexbox">
         <div class="inicio-flexbox1 inicio-flexbox1-posize">
           <div class="inicio-flexbox1-space"></div>
@@ -2729,7 +2741,7 @@ code {
           <div class="inicio-flexbox3-space"></div>
           <div class="inicio-flexbox1-item"><a style="text-decoration: none;" href="/"><div class="inicio-txt inicio-txt-posize">INICIO</div></a></div>
           <div class="inicio-flexbox1-space1"></div>
-          <div class="inicio-flexbox1-item"><a style="text-decoration: none;" href="/noticias"><div class="inicio-txt1 inicio-txt1-posize">NOTICIASSS</div></a></div>
+          <div class="inicio-flexbox1-item"><a  style="text-decoration: none;" href="/noticias"><div class="inicio-txt1 inicio-txt1-posize">NOTICIAS</div></a></div>
           <div class="inicio-flexbox1-space2"></div>
           <div class="inicio-flexbox1-item"><a style="text-decoration: none;" href="/simulador"><div class="inicio-txt3 inicio-txt3-posize">SIMULADOR</div></a></div>
           <div class="inicio-flexbox1-space4"></div>
@@ -2791,7 +2803,7 @@ code {
       </div>
 
       <div class="modal-footer">
-        <a class="btn btn-outline-danger" role="button" href="/logout">Logout</a>
+        <a class="btn btn-outline-danger" data-micron="bounce" role="button" href="/logout">Logout</a>
       </div>
     </div>
   </div>
@@ -2859,10 +2871,10 @@ code {
               <div>
               <form>
 
-                    <input style="display: none;" type="checkbox" onclick="drawChart()" class="btn-check" id="Bitcoin EUR" name="Bitcoin EUR" value="Bitcoin" autocomplete="off" checked>
+                    <input data-micron="bounce" style="display: none;" type="checkbox" onclick="drawChart()" class="btn-check" role="button" data-micron="bounce" id="Bitcoin EUR" name="Bitcoin EUR" value="Bitcoin" autocomplete="off" checked>
                     <label class="btn btn-outline-primary" for="Bitcoin EUR">Bitcoin</label>
 
-                    <input style="display: none;" type="checkbox" onclick="drawChart()" class="btn-check" id="Ethereum EUR" name="Ethereum EUR" value="Ethereum" autocomplete="off" checked>
+                    <input data-micron="bounce" style="display: none;" type="checkbox" onclick="drawChart()" class="btn-check" data-micron="bounce" id="Ethereum EUR" name="Ethereum EUR" value="Ethereum" autocomplete="off" checked>
                     <label class="btn btn-outline-danger" for="Ethereum EUR">Ethereum</label>
 
                     <input style="display: none;" type="checkbox" onclick="drawChart()" class="btn-check" id="BinanceCoin EUR" name="BinanceCoin EUR" value="BinanceCoin" autocomplete="off" checked>
@@ -2980,7 +2992,7 @@ Team Bancarrota SL, C/ Playa de Liencres, 2 - Madrid. Bancarrota App © 2021. To
 
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-outline-success">Enviar</button>
+        <button type="button" class="btn btn-outline-success" data-micron="bounce">Enviar</button>
       </div>
     </div>
   </div>
